@@ -5,17 +5,17 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Create App",
-  description: "Create Moments and Share Memories",
+  title: "Circle App - Making the World More Human",
+  description: "Social app to create moments and share your memories",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className={inter.className}>{children}</body>
     </html>
   );
