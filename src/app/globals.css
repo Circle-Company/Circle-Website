@@ -3,9 +3,247 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+/* Configurações de scroll suave */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Scroll mais lento para desktop */
+  @media (min-width: 768px) {
+    html {
+      scroll-timeline-name: none;
+      scroll-timeline-axis: block;
+      scroll-timeline-progress: 0;
+      scroll-timeline-snap-position: none;
+      scroll-timeline-source: auto;
+      scroll-timeline-boundary: auto;
+      scroll-timeline-start: auto;
+      scroll-timeline-end: auto;
+      scroll-timeline-time-range: auto;
+      scroll-timeline-name: none;
+      scroll-timeline-axis: block;
+      scroll-timeline-progress: 0;
+      scroll-timeline-snap-position: none;
+      scroll-timeline-source: auto;
+      scroll-timeline-boundary: auto;
+      scroll-timeline-start: auto;
+      scroll-timeline-end: auto;
+      scroll-timeline-time-range: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: none;
+      scroll-snap-stop: normal;
+      scroll-snap-align: none;
+      scroll-snap-coordinate: none;
+      scroll-snap-destination: 0 0;
+      scroll-snap-points-x: none;
+      scroll-snap-points-y: none;
+      scroll-snap-type-x: none;
+      scroll-snap-type-y: none;
+      scroll-padding: 0;
+      scroll-padding-block: 0;
+      scroll-padding-block-end: 0;
+      scroll-padding-block-start: 0;
+      scroll-padding-bottom: 0;
+      scroll-padding-inline: 0;
+      scroll-padding-inline-end: 0;
+      scroll-padding-inline-start: 0;
+      scroll-padding-left: 0;
+      scroll-padding-right: 0;
+      scroll-padding-top: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    }
+
+    /* Ajuste fino da velocidade do scroll */
+    html body {
+      scroll-behavior: smooth;
+      transition: scroll-behavior 0.5s ease-in-out;
+    }
+  }
+
+  /* Scroll mais lento para mobile */
+  @media (max-width: 767px) {
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+
+    /* Ajuste fino da velocidade do scroll */
+    html body {
+      scroll-behavior: smooth;
+      transition: scroll-behavior 0.3s ease-in-out;
+    }
+  }
+}
+
+/* Configurações do scrollbar para navegadores WebKit (Chrome, Safari, etc) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Animações customizadas */
+@keyframes animateDistort {
+  0% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  }
+  100% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+}
+
+@keyframes glitchText {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(79, 70, 229, 0.8),
+      0 0 20px rgba(79, 70, 229, 0.5), 0 0 30px rgba(79, 70, 229, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(79, 70, 229, 0.8),
+      0 0 30px rgba(79, 70, 229, 0.5), 0 0 40px rgba(79, 70, 229, 0.3);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3),
+      0 0 15px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5),
+      0 0 25px rgba(59, 130, 246, 0.3);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Animação de cursor piscante para o AnimatedText */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Classe para animação de glow nas bordas dos cards */
+.glow-border {
+  animation: pulseGlow 3s infinite;
+}
+
+/* Estilos para os cartões de recursos */
+.feature-card {
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  background-color: rgba(17, 24, 39, 0.9);
+  transform: translateY(-5px);
+}
+
+.feature-card:hover h3 {
+  color: rgb(219, 234, 254);
+}
+
+/* Efeito de distorção para o final da página */
+.distortion-element {
+  transition: transform 0.2s ease-out;
+}
+
+.distortion-element:hover {
+  transform: scale(1.05) skewX(2deg);
+}
+
+/* Melhorias de animação para os cards de recursos */
+@keyframes glow-border-pulse {
+  0%,
+  100% {
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+}
+
+.glow-border {
+  animation: glow-border-pulse 3s infinite;
+  transition: all 0.3s ease;
+}
+
+.glow-border:hover {
+  animation: glow-border-pulse 1.5s infinite;
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+}
+
+/* Animação para o header */
+@keyframes headerGlowEffect {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Efeito de transição suave para o header */
+header {
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease,
+    border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+header.shadow-lg {
+  animation: headerGlowEffect 0.6s ease-out forwards;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,36 +255,60 @@
 }
 
 @font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYREGULAR.otf') format('opentype');
+  font-family: "SF Pro Display";
+  src: url("/fonts/SFPRODISPLAYREGULAR.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYMEDIUM.otf') format('opentype');
+  font-family: "SF Pro Display";
+  src: url("/fonts/SFPRODISPLAYMEDIUM.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYBOLD.otf') format('opentype');
+  font-family: "SF Pro Display";
+  src: url("/fonts/SFPRODISPLAYBOLD.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
+@layer base {
+  html {
+    font-family: "SF Pro Display", system-ui, sans-serif;
+  }
+}
 
 body {
   color: rgb(var(--foreground-rgb));
-  font-family: 'SF Pro Display', sans-serif;
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: rgb(var(--background-start-rgb));
+  overflow-x: hidden;
+  overflow-y: scroll;
+  min-height: 100vh;
+  perspective: 1px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Classes de utilidade para pesos de fonte específicos */
+.font-regular {
+  font-family: "SF Pro Display";
+  font-weight: 400;
+}
+
+.font-medium {
+  font-family: "SF Pro Display";
+  font-weight: 500;
+}
+
+.font-bold {
+  font-family: "SF Pro Display";
+  font-weight: 600;
 }
 
 @layer utilities {
