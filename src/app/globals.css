@@ -2,6 +2,156 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Configurações para 32 bits de cor - evita serrilhado de gradiente */
+* {
+  /* Força 32 bits de cor para todos os elementos */
+  color-depth: 32;
+  -webkit-color-depth: 32;
+  -moz-color-depth: 32;
+  
+  /* Melhora a renderização de gradientes */
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Força aceleração de hardware para melhor renderização */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  transform: translateZ(0);
+  
+  /* Melhora a qualidade de renderização */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* Força renderização em alta qualidade */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Configurações específicas para gradientes */
+*[class*="gradient"],
+*[style*="gradient"] {
+  /* Força 32 bits de cor especificamente para gradientes */
+  -webkit-color-depth: 32;
+  color-depth: 32;
+  
+  /* Melhora a renderização de gradientes */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  
+  /* Força compositing em camada separada */
+  will-change: transform;
+  
+  /* Melhora a qualidade de renderização */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Configurações específicas para elementos com background gradiente */
+.bg-gradient-to-b,
+.bg-gradient-to-r,
+.bg-gradient-to-l,
+.bg-gradient-to-t,
+.bg-gradient-to-br,
+.bg-gradient-to-bl,
+.bg-gradient-to-tr,
+.bg-gradient-to-tl {
+  /* Força renderização em alta qualidade */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Configurações para texto com gradiente */
+.bg-clip-text {
+  /* Melhora a renderização de texto com gradiente */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Força alta qualidade */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Configurações específicas para elementos com gradientes complexos */
+.hero-gradient,
+.features-gradient,
+.manifesto-gradient {
+  /* Força renderização em camada separada para gradientes complexos */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Força 32 bits de cor */
+  -webkit-color-depth: 32;
+  color-depth: 32;
+  
+  /* Melhora a qualidade de renderização */
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Otimizações específicas para botões com gradiente */
+button[class*="gradient"],
+.download-button,
+.gradient-button {
+  /* Força aceleração de hardware */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, box-shadow;
+  
+  /* Melhora a renderização de gradientes em botões */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Força 32 bits de cor */
+  -webkit-color-depth: 32;
+  color-depth: 32;
+}
+
+/* Otimizações para elementos com overlay de gradiente */
+.gradient-overlay,
+[class*="from-black"],
+[class*="to-transparent"] {
+  /* Força renderização em alta qualidade para overlays */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: opacity;
+  
+  /* Melhora a renderização de transparências */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Configurações específicas para gradientes de texto grandes */
+h1[class*="gradient"],
+h2[class*="gradient"],
+h3[class*="gradient"],
+.text-6xl[class*="gradient"],
+.text-8xl[class*="gradient"] {
+  /* Força renderização em alta qualidade para texto grande com gradiente */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* Força aceleração de hardware */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  
+  /* Força 32 bits de cor */
+  -webkit-color-depth: 32;
+  color-depth: 32;
+}
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
@@ -197,6 +347,64 @@
 /* Efeito de distorção para o final da página */
 .distortion-element {
   transition: transform 0.2s ease-out;
+}
+
+/* Classes para line-clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Animação para o QR Code */
+@keyframes qr-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.qr-animation {
+  animation: qr-pulse 2s ease-in-out infinite;
+}
+
+/* Efeito hover para cards de notícias */
+.news-card {
+  transition: all 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradiente animado para backgrounds */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
 }
 
 .distortion-element:hover {

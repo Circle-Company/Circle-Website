@@ -12,6 +12,10 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-smooth": "linear-gradient(var(--tw-gradient-stops))",
+        "gradient-smooth-to-b": "linear-gradient(to bottom, var(--tw-gradient-stops))",
+        "gradient-smooth-to-r": "linear-gradient(to right, var(--tw-gradient-stops))",
+        "gradient-smooth-to-br": "linear-gradient(to bottom right, var(--tw-gradient-stops))",
       },
       colors: {
         primary: '#EEEEEE', // Cor principal (por exemplo, para títulos)
@@ -23,6 +27,12 @@ const config: Config = {
         description: '#3D3D3D', // Cor das descrições
         legend: '#F5F5F7',
         footerText: '#D4D4D4', // Cor do botão do rodapé
+        'gradient-start': '#ffffff',
+        'gradient-mid': '#f3f4f6',
+        'gradient-end': '#9ca3af',
+        'gradient-dark-start': '#000000',
+        'gradient-dark-mid': '#0f0f0f',
+        'gradient-dark-end': '#1f1f1f',
       },
       fontSize: {
         '50px': '50px',
@@ -41,8 +51,59 @@ const config: Config = {
       fontFamily: {
         'sf-pro': ['SF Pro Display', 'sans-serif'],
       },
+      screens: {
+        'high-dpi': { 'raw': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)' },
+        'retina': { 'raw': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx)' },
+      },
+      gradientColorStops: {
+        'smooth-white': '#ffffff',
+        'smooth-gray-100': '#f7fafc',
+        'smooth-gray-200': '#edf2f7',
+        'smooth-gray-300': '#e2e8f0',
+        'smooth-gray-400': '#cbd5e0',
+        'smooth-gray-500': '#a0aec0',
+        'smooth-black': '#000000',
+        'smooth-gray-900': '#1a202c',
+        'smooth-gray-800': '#2d3748',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }: any) {
+      const newUtilities = {
+        '.force-32bit': {
+          '-webkit-color-depth': '32',
+          'color-depth': '32',
+          '-webkit-transform': 'translate3d(0, 0, 0)',
+          'transform': 'translate3d(0, 0, 0)',
+          'will-change': 'transform',
+          '-webkit-backface-visibility': 'hidden',
+          'backface-visibility': 'hidden',
+        },
+        '.gradient-quality': {
+          '-webkit-color-depth': '32',
+          'color-depth': '32',
+          '-webkit-transform': 'translate3d(0, 0, 0)',
+          'transform': 'translate3d(0, 0, 0)',
+          'will-change': 'transform, opacity',
+          '-webkit-backface-visibility': 'hidden',
+          'backface-visibility': 'hidden',
+          '-webkit-perspective': '1000px',
+          'perspective': '1000px',
+        },
+        '.text-gradient-quality': {
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+          'text-rendering': 'optimizeLegibility',
+          '-webkit-color-depth': '32',
+          'color-depth': '32',
+          '-webkit-transform': 'translate3d(0, 0, 0)',
+          'transform': 'translate3d(0, 0, 0)',
+          'will-change': 'transform',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };
 export default config;
