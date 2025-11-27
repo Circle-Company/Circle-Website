@@ -1,34 +1,31 @@
 "use client";
 
-import { AnimatedText } from "@/components/AnimatedText";
-import { DownloadButton } from "@/components/DownloadButton";
-import { DownloadCallToAction } from "@/components/DownloadCallToAction";
-import { FeaturesSection } from "@/components/FeaturesSection";
-import { Footer } from "@/components/Footer";
-import { ManifestoSection } from "@/components/ManifestoSection";
-import { PartnersShowcase } from "@/components/PartnersShowcase";
-import { QRCodeSection } from "@/components/QRCodeSection";
-import { ScrollProgress } from "@/components/ScrollProgress";
-import { SocialImagePost } from "@/components/SocialImagePost";
-import { VideoHeroSection } from "@/components/VideoHeroSection";
-import { VideoSection } from "@/components/VideoSection";
+import { Button } from "@/components/buttons/standart.animated";
+import { LanguageSelector } from "@/components/language-selector";
+import { useLanguage } from "@/contexts/language-context";
+import fonts from "@/constants/fonts";
+import { colors } from "@/constants/colors";
+import sizes from "@/constants/sizes";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
-    <>
-      {/* Barra de Progresso - Primeiro elemento absoluto */}
-      
-      <ScrollProgress />
-      <main className="min-h-screen bg-black text-white relative font-regular">
-        <VideoHeroSection />
-        <SocialImagePost />
-        <ManifestoSection />
-        <PartnersShowcase />
-        <FeaturesSection />
-        <DownloadCallToAction />
-        <QRCodeSection />
-        <Footer />
-      </main>
-    </>
+    <main style={{
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    }}>
+      <h1
+        style={{
+          fontSize: fonts.size.extraLargeTitle,
+          fontFamily: fonts.family.Black,
+          fontWeight: 800,
+        }}
+      >
+        {t("Welcome to Circle")}
+      </h1>
+      <p>{t("Starting from scratch with Next.js")}</p>
+    </main>
   );
 }

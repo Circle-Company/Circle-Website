@@ -1,27 +1,117 @@
-import { Footer } from "@/components/molecules/footer";
+"use client";
 
-export default function Terms() {
-  const terms = require('@/app/data/community-guidelines.json');
+import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/language-context";
+import { termsService } from "@/services/api/terms";
+import type { TermsDocument } from "@/services/api/terms/types";
+import { useTextLibrary } from "@/hooks/use.text.library";
+
+export default function CommunityGuidelinesPage() {
+  const { language, t } = useLanguage();
+  const textLibrary = useTextLibrary();
+  const [communityGuidelines, setCommunityGuidelines] =
+    useState<TermsDocument | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    textLibrary.date.setCapitalize(false);
+    let isMounted = true;
+
+    async function load() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await termsService.getTerms(language);
+        if (isMounted) {
+          setCommunityGuidelines(data.terms.communityGuidelines);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error(err);
+          setError(
+            t(
+              "Unable to load community guidelines. Check your internet connection and try again."
+            )
+          );
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    load();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [language, textLibrary, t]);
+
+  const handlePreChangeLanguage = () => {
+    // Pode fazer qualquer lógica antes de trocar de idioma (sync ou async).
+    // Mantemos os dados atuais enquanto a nova língua carrega.
+    setLoading(true);
+  };
+
+  if (!communityGuidelines) {
+    return (
+      <main>
+        <p>{error ? error : t("Loading community guidelines...")}</p>
+      </main>
+    );
+  }
+
+  const updatedAt = communityGuidelines?.metadata.updatedAt
+    ? `${t("Updated")} ${textLibrary.date.toRelativeTime(
+        new Date(communityGuidelines.metadata.updatedAt)
+      )}`
+    : "";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <main className="flex-grow flex flex-col items-center justify-center p-10">
-        <h1 className="text-4xl font-bold mb-8 font-sf-pro text-gray-900">Diretrizes da Comunidade</h1>
-        <div className="w-full max-w-3xl">
-          {terms.map((term: any, index: number) => (
-            <div key={index} className="py-6 border-b border-gray-300">
-              <h2 className="text-2xl font-semibold font-sf-pro text-gray-800 mb-4">{term.title}</h2>
-              {term.paragraphs.map((text: string, index: number) => (
-                <p key={index} className="text-gray-600 font-sf-pro mb-4 last:mb-0">{text}</p>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div style={{marginTop: 10}}>
-          <Footer />
-        </div>
-        
-      </main>
-    </div>
+    <main>
+      <header>
+        <h1>{communityGuidelines?.title}</h1>
+        <p>
+          <span>{communityGuidelines?.metadata.author}</span>
+          <span> · </span>
+          <span>
+            {t("Version")} {communityGuidelines?.metadata.version}
+          </span>
+          {updatedAt && <span> · {updatedAt}</span>}
+        </p>
+      </header>
+
+      <section>
+        {communityGuidelines?.body.map((section) => (
+          <article key={section.title}>
+            <h2>{section.title}</h2>
+
+            {section.paragraphs.map((paragraph, index) => {
+              if (typeof paragraph === "string") {
+                return (
+                  <p key={index}>{paragraph}</p>
+                );
+              }
+
+              return (
+                <div key={index}>
+                  <p>{paragraph.text}</p>
+
+                  {paragraph.topics && paragraph.topics.length > 0 && (
+                    <ul>
+                      {paragraph.topics.map((topic, topicIndex) => (
+                        <li key={topicIndex}>{topic}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </article>
+        ))}
+      </section>
+    </main>
   );
 }
+
+
