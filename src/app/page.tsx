@@ -1,31 +1,80 @@
 "use client";
 
-import { Button } from "@/components/buttons/standart.animated";
-import { LanguageSelector } from "@/components/language-selector";
-import { useLanguage } from "@/contexts/language-context";
-import fonts from "@/constants/fonts";
-import { colors } from "@/constants/colors";
-import sizes from "@/constants/sizes";
+import { Footer } from "@/sections/footer";
+import { Header } from "@/sections/header";
+import { Screen } from "@/components/screen";
+import { HomeCta } from "@/sections/home.cta";
+import { HomeIllustration } from "@/sections/home.illustration";
+import { useIsMobile } from "@/hooks/use.platform.detection";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const isMobile = useIsMobile();
+
+  const wrapperStyle = {
+    display: "flex",
+    flexDirection: isMobile ? "column" : "row",
+    alignItems: "center",
+    justifyContent: "center",
+
+    width: "100%",
+    maxWidth: 1400,
+    margin: "0 auto",
+
+    paddingLeft: isMobile ? 10 : 60,
+    paddingRight: isMobile ? 10 : 60,
+
+    gap: isMobile ? 40 : 20,
+
+    // força que esse bloco nunca passe da tela no desktop
+    maxHeight: isMobile ? "none" : "100vh",
+    overflow: isMobile ? "visible" : "hidden",
+  };
+
+  const absoluteImageStyle = {
+    position: "absolute",
+    bottom: -250,
+    left: -20,
+    width: 700,
+    height: 700,
+    opacity: 0.4,
+    pointerEvents: "none",
+  };
+
+  const containerStyle = {
+    position: "relative",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+
+    // prevenir expansão no desktop
+    maxHeight: isMobile ? "none" : "100vh",
+    overflow: isMobile ? "visible" : "hidden",
+  };
 
   return (
-    <main style={{
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    }}>
-      <h1
-        style={{
-          fontSize: fonts.size.extraLargeTitle,
-          fontFamily: fonts.family.Black,
-          fontWeight: 800,
-        }}
-      >
-        {t("Welcome to Circle")}
-      </h1>
-      <p>{t("Starting from scratch with Next.js")}</p>
-    </main>
+    <div
+      style={{
+        overflow: isMobile ? "auto" : "hidden",
+        height: isMobile ? "auto" : "100vh",
+        position: "relative",
+      }}
+    >
+      {!isMobile && (
+        <img src="/images/bg_desktop.png" style={absoluteImageStyle} />
+      )}
+
+      <Header />
+
+      <Screen>
+        <div style={containerStyle}>
+          <div style={wrapperStyle}>
+            <HomeCta />
+            <HomeIllustration />
+          </div>
+        </div>
+      </Screen>
+
+      <Footer />
+    </div>
   );
 }

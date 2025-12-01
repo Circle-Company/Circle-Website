@@ -1,9 +1,9 @@
- "use client";
+"use client";
 
-import Image from "next/image";
+import { useIsMobile } from "@/hooks/use.platform.detection";
 import { colors } from "@/constants/colors";
 import fonts from "@/constants/fonts";
-import sizes from "@/constants/sizes";
+import { useSizes } from "@/constants/sizes";
 import React, { type CSSProperties, useEffect, useState } from "react";
 import { Text } from "@/components/themed";
 import { useLanguage } from "@/contexts/language-context";
@@ -12,6 +12,8 @@ import { Button } from "./buttons/standart.animated";
 export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
   const { languagesList, atualAppLanguage, changeAppLanguage } = useLanguage();
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const isMobile = useIsMobile();
+  const sizes = useSizes();
 
   useEffect(() => {
     setShowLanguageModal(false);
@@ -33,38 +35,35 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: sizes.paddings[10] * 0.5,
-    opacity: showLanguageModal ? 0.6 : 1,
+    opacity: showLanguageModal ? 0.4 : 1,
     cursor: "pointer",
-    paddingInline: sizes.paddings[20],
-    paddingBlock: sizes.paddings[10] * 0.4,
-    borderRadius: sizes.borderRadius[10],
-    border: `1px solid ${colors.gray[3]}`,
-    backgroundColor: colors.gray[1],
+    backgroundColor: "#00000000",
   };
 
   const title: CSSProperties = {
     alignSelf: "center",
     fontFamily: fonts.family.Semibold,
-    fontSize: fonts.size.body,
-    color: colors.gray.black,
+    fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
+    color: colors.gray[4],
+    textDecoration: "underline",
   };
 
   const selectorContainer: CSSProperties = {
-    top: "110%",
-    right: 0,
+    bottom: "100%",
+    alignSelf: "center",
     zIndex: 100,
     position: "absolute",
     borderRadius: sizes.borderRadius[10] + 4,
     overflow: "hidden",
-    backgroundColor: colors.gray[8],
-    padding: 4,
+    backgroundColor: colors.gray.white,
+    padding: 5,
     boxShadow: "0 8px 20px rgba(0,0,0,0.35)",
     minWidth: 140,
+    minHeight: 50,
   };
 
   const languageContainer: CSSProperties = {
-    paddingBlock: sizes.paddings[10] * 0.4,
+    paddingBlock: sizes.paddings[10] * 0.8,
     paddingInline: sizes.paddings[20],
     borderRadius: sizes.borderRadius[10],
     overflow: "hidden",
@@ -77,7 +76,7 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
 
   const languageText: CSSProperties = {
     alignSelf: "center",
-    fontFamily: fonts.family.Medium,
+    fontFamily: fonts.family.Semibold,
     fontSize: fonts.size.body * 0.9,
     letterSpacing: -0.4,
   };
@@ -87,25 +86,24 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
       <Button
         action={handlePress}
         testID="language-selector-button"
-        animationProps={{
-          bounciness: 12,
-          animationScale: 0.8,
+        animation={{
+          enabled: true,
+          tap: {
+            scale: 0.9,
+            duration: 0.2,
+            bounciness: 12,
+          },
+          hover: {
+            scale: 1.0,
+            scaleDuration: 0,
+            colorDuration: 0,
+            backgroundColor: "transparent",
+            textColor: "inherit",
+          },
         }}
         style={atualLanguageContainer}
       >
         <Text style={title}>{atualAppLanguage.nativeName}</Text>
-        <Image
-          src="/icons/svg/arrow-thic-down.svg"
-          alt="Abrir seletor de idioma"
-          width={sizes.icons[12].width * 0.6}
-          height={sizes.icons[12].height * 0.6}
-          style={{
-            marginLeft: 4,
-            transform: `rotate(${showLanguageModal ? 180 : 0}deg)`,
-            transition: "transform 0.2s ease",
-            color: colors.gray.white,
-          }}
-        />
       </Button>
 
       {showLanguageModal && (
@@ -123,16 +121,16 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
                 }}
                 style={{
                   ...languageContainer,
-                  backgroundColor: isActive ? colors.gray[7] : "transparent",
+                  backgroundColor: isActive ? colors.gray.black : "transparent",
                 }}
               >
                 <Text
                   style={{
                     ...languageText,
-                    color: isActive ? colors.gray.white : colors.gray[1],
+                    color: isActive ? colors.gray.white : colors.gray.black,
                     fontFamily: isActive
-                      ? fonts.family.Bold
-                      : fonts.family.Medium,
+                      ? fonts.family.Semibold
+                      : fonts.family.Bold,
                   }}
                 >
                   {item.nativeName}

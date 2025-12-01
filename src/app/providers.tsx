@@ -2,14 +2,16 @@
 
 import type { ReactNode } from "react";
 import { LanguageProvider } from "@/contexts/language-context";
+import { TermsProvider } from "@/contexts/terms-context";
 
 interface ProvidersProps {
   children: ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return <LanguageProvider>{children}</LanguageProvider>;
+  return (
+    <LanguageProvider>
+      <TermsProvider>{children}</TermsProvider>
+    </LanguageProvider>
+  );
 }
-
-
-

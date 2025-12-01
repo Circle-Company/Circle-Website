@@ -1,14 +1,21 @@
-import sizes from "@/constants/sizes";
+import { useSizes } from "@/constants/sizes";
 import fonts from "@/constants/fonts";
+import { useIsMobile } from "@/hooks/use.platform.detection";
 import Link from "next/link";
+import { colors } from "@/constants/colors";
+import { useLanguage } from "@/contexts/language-context";
 
 export function TermsNav() {
+  const { t } = useLanguage();
+  const isMobile = useIsMobile();
+  const sizes = useSizes();
+
   return (
     <nav
       style={{
         display: "flex",
         flexWrap: "wrap",
-        gap: sizes.paddings[10],
+        gap: isMobile ? sizes.paddings[10] : sizes.spaces[30],
         alignItems: "center",
         justifyContent: "flex-end",
       }}
@@ -17,33 +24,35 @@ export function TermsNav() {
         href="/community-guidelines"
         style={{
           fontFamily: fonts.family.Semibold,
-          fontSize: fonts.size.body,
+          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
           textDecoration: "none",
+          color: colors.gray[4],
         }}
       >
-        Community Guidelines
+        {t("Community Guidelines")}
       </Link>
       <Link
         href="/terms-of-service"
         style={{
           fontFamily: fonts.family.Semibold,
-          fontSize: fonts.size.body,
+          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
           textDecoration: "none",
+          color: colors.gray[4],
         }}
       >
-        Terms of Service
+        {t("Terms of Service")}
       </Link>
       <Link
         href="/privacy-policy"
         style={{
           fontFamily: fonts.family.Semibold,
-          fontSize: fonts.size.body,
+          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
           textDecoration: "none",
+          color: colors.gray[4],
         }}
       >
-        Privacy Policy
+        {t("Privacy Policy")}
       </Link>
     </nav>
   );
 }
-

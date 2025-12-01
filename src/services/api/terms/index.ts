@@ -6,7 +6,7 @@ export class TermsService {
   constructor(private readonly http = httpClient) {}
 
   async getTerms(lang: Language) {
-    const { data } = await this.http.get<TermsResponse>(`/terms/${lang}`);
+    const { data } = await this.http.get<TermsResponse>(`/site/terms/${lang}`);
     return data;
   }
 }

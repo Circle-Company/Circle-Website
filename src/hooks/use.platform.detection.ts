@@ -1,28 +1,20 @@
-const isBrowser =
-    typeof window !== "undefined" && typeof navigator !== "undefined"
+"use client";
 
-const userAgent = isBrowser ? navigator.userAgent || "" : ""
+import { useEffect, useState } from "react";
 
-// Heurística básica de mobile baseada em userAgent
-const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    userAgent,
-)
+export function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
 
-// Heurística adicional baseada em touch e largura de tela
-const isTouchCapable =
-    isBrowser &&
-    ("ontouchstart" in window ||
-        (typeof navigator.maxTouchPoints === "number" &&
-            navigator.maxTouchPoints > 0))
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth < breakpoint);
+    };
 
-const isNarrowViewport = isBrowser ? window.innerWidth <= 1024 : false
+    check(); // primeira leitura após hidratação
 
-export const isWeb = true
-export const isWebMobile = isBrowser && (isMobileUA || (isTouchCapable && isNarrowViewport))
-export const isWebDesktop = isBrowser && !isWebMobile
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [breakpoint]);
 
-export const devicePlatform: "web-mobile" | "web-desktop" | "unknown" = !isBrowser
-    ? "unknown"
-    : isWebMobile
-    ? "web-mobile"
-    : "web-desktop"
+  return isMobile;
+}
