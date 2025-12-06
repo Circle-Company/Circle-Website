@@ -6,11 +6,13 @@ import { Screen } from "@/components/screen";
 import { HomeCta } from "@/sections/home.cta";
 import { HomeIllustration } from "@/sections/home.illustration";
 import { useIsMobile } from "@/hooks/use.platform.detection";
+import { CSSProperties } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const isMobile = useIsMobile();
 
-  const wrapperStyle = {
+  const wrapperStyle: CSSProperties = {
     display: "flex",
     flexDirection: isMobile ? "column" : "row",
     alignItems: "center",
@@ -35,7 +37,7 @@ export default function Home() {
     boxSizing: "border-box",
   };
 
-  const absoluteImageStyle = {
+  const absoluteImageStyle: CSSProperties = {
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -43,11 +45,11 @@ export default function Home() {
     height: "auto",
     maxWidth: "100vw",
     opacity: 0.4,
-    pointerEvents: "none",
+    pointerEvents: "none" as React.CSSProperties["pointerEvents"],
     overflow: "hidden",
   };
 
-  const containerStyle = {
+  const containerStyle: CSSProperties = {
     position: "relative",
     width: "100vw",
     height: isMobile ? "auto" : "calc(100vh - 120px)",
@@ -82,7 +84,11 @@ export default function Home() {
       }}
     >
       {!isMobile && (
-        <img src="/images/bg_desktop.png" style={absoluteImageStyle} />
+        <Image
+          src="/images/bg_desktop.png"
+          alt="Background desktop"
+          style={absoluteImageStyle}
+        />
       )}
 
       <Header />

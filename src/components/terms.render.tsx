@@ -6,6 +6,7 @@ import fonts from "@/constants/fonts";
 import { colors } from "@/constants/colors";
 import { useSizes } from "@/constants/sizes";
 import { useIsMobile } from "@/hooks/use.platform.detection";
+import { CSSProperties } from "react";
 
 interface RenderTermsProps {
   doc: TermsDocument;
@@ -76,7 +77,7 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     marginTop: isMobile ? sizes.margins[10] : "1rem",
     marginLeft: isMobile ? 20 : 20,
     marginBottom: isMobile ? sizes.margins[20] : "4rem",
-    textAlign: isMobile ? "center" : "left",
+    textAlign: (isMobile ? "center" : "left") as any,
   };
 
   const paragraphContainerStyle = {
@@ -90,7 +91,7 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     lineHeight: "1.75",
     color: colors.gray[3],
     marginBottom: "1rem",
-    textAlign: isMobile ? "left" : "left",
+    textAlign: "left" as const,
   };
 
   const paragraphWithTopicsStyle = {
@@ -108,14 +109,14 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     padding: isMobile ? "1rem" : "1.5rem",
   };
 
-  const topicItemStyle = {
+  const topicItemStyle: CSSProperties = {
     display: "flex",
     alignItems: "flex-start",
     marginBottom: "0.75rem",
     paddingLeft: "0.5rem",
   };
 
-  const topicBulletStyle = {
+  const topicBulletStyle: CSSProperties = {
     width: "6px",
     height: "6px",
     backgroundColor: colors.gray[4],
@@ -125,7 +126,7 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     flexShrink: 0,
   };
 
-  const topicTextStyle = {
+  const topicTextStyle: CSSProperties = {
     fontSize: fonts.size.callout,
     fontFamily: fonts.family.Regular,
     color: colors.gray[3],

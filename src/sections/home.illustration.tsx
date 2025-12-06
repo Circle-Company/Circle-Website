@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { CSSProperties } from "react";
 import { useSizes } from "@/constants/sizes";
 import { useLanguage } from "@/contexts/language-context";
 import { useIsMobile } from "@/hooks/use.platform.detection";
+import Image from "next/image";
+import { attachTimeline } from "framer-motion";
 
 export function HomeIllustration() {
   const { atualAppLanguage } = useLanguage();
@@ -23,30 +25,28 @@ export function HomeIllustration() {
     pt: "/images/illustration_mobile_pt.png",
   };
 
-  function pickImage(mobile, lang) {
-    const code = lang === "pt" ? "pt" : "en";
-    return mobile ? mobileImages[code] : desktopImages[code];
-  }
-
   function pickMaxWidth(mobile: boolean, width: number) {
     if (!width || width < 200) return mobile ? 480 : 600;
     return mobile ? width * 1.25 : width * 0.48;
   }
 
-  function getReliableWidth() {
-    const fromSizes = sizes?.screen?.width;
-    if (fromSizes && fromSizes > 200) return fromSizes;
-    if (typeof window !== "undefined") return window.innerWidth;
-    return 400;
-  }
-
   const computeState = React.useCallback(() => {
+    function getReliableWidth() {
+      const fromSizes = sizes?.screen?.width;
+      if (fromSizes && fromSizes > 200) return fromSizes;
+      if (typeof window !== "undefined") return window.innerWidth;
+      return 400;
+    }
+    function pickImage(mobile: boolean, lang: string) {
+      const code = lang === "pt" ? "pt" : "en";
+      return mobile ? mobileImages[code] : desktopImages[code];
+    }
     const w = getReliableWidth();
     return {
       img: pickImage(isMobile, atualAppLanguage.code),
       maxW: pickMaxWidth(isMobile, w),
     };
-  }, [isMobile, atualAppLanguage.code, sizes.screen.width]);
+  }, [isMobile, atualAppLanguage.code, sizes]);
 
   const [state, setState] = React.useState(() => computeState());
 
@@ -62,7 +62,7 @@ export function HomeIllustration() {
     return () => window.removeEventListener("resize", handler);
   }, [mounted, computeState]);
 
-  const container = {
+  const container: CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -88,23 +88,29 @@ export function HomeIllustration() {
         maxHeight: "100%",
         marginLeft: -10,
         marginTop: -10,
-      };
+      } as CSSProperties;
     } else {
       return {
-        width: "100%",
+        width: 600,
         height: "auto",
         objectFit: "contain",
         transition: "none",
         maxHeight: "100%",
-        marginLeft: 30,
+        marginLeft: atualAppLanguage.code == "pt" ? 50 : 40,
         marginTop: 0,
-      };
+      } as CSSProperties;
     }
-  }, [isMobile, state.maxW]);
+  }, [isMobile, state.maxW, atualAppLanguage]);
 
   return (
     <div style={container}>
-      <img src={state.img} style={imageStyle} />
+      <Image
+        src={state.img}
+        alt={isMobile ? "Mobile illustration" : "Desktop illustration"}
+        width={isMobile ? state.maxW : 600}
+        height={isMobile ? state.maxW * 0.6 : 400}
+        style={imageStyle}
+      />
     </div>
   );
 }
