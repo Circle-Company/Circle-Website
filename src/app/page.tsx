@@ -14,7 +14,7 @@ export default function Home() {
     display: "flex",
     flexDirection: isMobile ? "column" : "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: isMobile ? "flex-start" : "center",
 
     width: "100%",
     maxWidth: 1400,
@@ -23,40 +23,62 @@ export default function Home() {
     paddingLeft: isMobile ? 10 : 60,
     paddingRight: isMobile ? 10 : 60,
 
-    gap: isMobile ? 40 : 20,
+    gap: isMobile ? 40 : 40, // maior gap para telas grandes
+
+    minHeight: isMobile ? "auto" : "70vh", // garante área mínima centralizada no desktop
+    height: isMobile ? "auto" : "calc(100vh - 120px)", // 120px para header/footer
 
     // força que esse bloco nunca passe da tela no desktop
     maxHeight: isMobile ? "none" : "100vh",
-    overflow: isMobile ? "visible" : "hidden",
+    overflowX: "hidden",
+    overflowY: isMobile ? "auto" : "hidden",
+    boxSizing: "border-box",
   };
 
   const absoluteImageStyle = {
     position: "absolute",
-    bottom: -250,
-    left: -20,
-    width: 700,
-    height: 700,
+    bottom: 0,
+    left: 0,
+    width: "100vw",
+    height: "auto",
+    maxWidth: "100vw",
     opacity: 0.4,
     pointerEvents: "none",
+    overflow: "hidden",
   };
 
   const containerStyle = {
     position: "relative",
-    width: "100%",
+    width: "100vw",
+    height: isMobile ? "auto" : "calc(100vh - 120px)",
     display: "flex",
-    justifyContent: "center",
-
-    // prevenir expansão no desktop
-    maxHeight: isMobile ? "none" : "100vh",
-    overflow: isMobile ? "visible" : "hidden",
+    justifyContent: isMobile ? "flex-start" : "center",
+    alignItems: "center",
+    overflowX: "hidden",
+    overflowY: isMobile ? "auto" : "hidden",
+    boxSizing: "border-box",
+    margin: 0,
+    padding: 0,
   };
 
   return (
     <div
       style={{
-        overflow: isMobile ? "auto" : "hidden",
+        overflowX: "hidden",
+        overflowY: isMobile ? "auto" : "hidden",
         height: isMobile ? "auto" : "100vh",
+        width: "100vw",
         position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: isMobile ? "flex-start" : "center",
+        alignItems: "center",
+        boxSizing: "border-box",
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        WebkitOverflowScrolling: "touch",
+        margin: 0,
+        padding: 0,
       }}
     >
       {!isMobile && (

@@ -123,7 +123,13 @@ export function HomeCta() {
         }}
       >
         <Button
-          action={async () => console.log("Baixar app")}
+          action={async () => {
+            window.open(
+              "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
+              "_blank",
+              "noopener,noreferrer",
+            );
+          }}
           style={{
             height: sizes.button.height * 1.2,
             backgroundColor: colors.gray.white,
