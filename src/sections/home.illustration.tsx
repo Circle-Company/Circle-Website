@@ -77,16 +77,30 @@ export function HomeIllustration() {
     marginTop: isMobile ? -10 : 0, // puxa ainda mais a imagem para cima
   };
 
-  const imageStyle = {
-    width: isMobile ? "110%" : "100%",
-    maxWidth: state.maxW,
-    height: "auto",
-    objectFit: "contain",
-    transition: "max-width 0.3s ease",
-    maxHeight: "100%",
-    marginLeft: isMobile ? -10 : 30,
-    marginTop: isMobile ? -10 : 0, // aproxima ainda mais do topo
-  };
+  const imageStyle = React.useMemo(() => {
+    if (isMobile) {
+      return {
+        width: "110%",
+        maxWidth: state.maxW,
+        height: "auto",
+        objectFit: "contain",
+        transition: "max-width 0.3s ease",
+        maxHeight: "100%",
+        marginLeft: -10,
+        marginTop: -10,
+      };
+    } else {
+      return {
+        width: "100%",
+        height: "auto",
+        objectFit: "contain",
+        transition: "none",
+        maxHeight: "100%",
+        marginLeft: 30,
+        marginTop: 0,
+      };
+    }
+  }, [isMobile, state.maxW]);
 
   return (
     <div style={container}>

@@ -69,7 +69,11 @@ export function Header() {
         {!isMobile && (
           <Button
             action={async () => {
-              console.log("Baixar app");
+              window.open(
+                "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
+                "_blank",
+                "noopener,noreferrer",
+              );
             }}
             style={{
               height: sizes.button.height,

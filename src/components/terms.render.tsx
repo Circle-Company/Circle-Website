@@ -11,6 +11,14 @@ interface RenderTermsProps {
   doc: TermsDocument;
 }
 
+// Utilitário para cor com opacidade
+function hexToRgba(hex: string, alpha: number) {
+  let c = hex.replace("#", "");
+  if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+  const num = parseInt(c, 16);
+  return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+}
+
 export function RenderTerms({ doc }: RenderTermsProps) {
   const { t } = useLanguage();
   const textLibrary = useTextLibrary();
@@ -37,9 +45,9 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     padding: isMobile ? "0.4rem 1.2rem" : "0.6rem 2rem",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.gray[8] + 60,
+    backgroundColor: hexToRgba(colors.gray[8], 0.6),
     borderRadius: sizes.borderRadius[20],
-    border: `2px solid ${colors.gray[8] + 90}`,
+    border: `2px solid ${hexToRgba(colors.gray[8], 0.9)}`,
     textAlign: "center" as const,
     alignSelf: "center",
     display: "flex",
@@ -166,12 +174,12 @@ export function RenderTerms({ doc }: RenderTermsProps) {
         </div>
 
         <div style={metadataContainerStyle}>
-          <Text style={metadataItemStyle}>{doc.metadata.author}</Text>
+          <Text style={metadataItemStyle}>{doc.metadata?.author ?? ""}</Text>
           <Text style={metadataItemStyle}>
-            {t("Version")} {doc.metadata.version}
+            {t("Version")} {doc.metadata?.version ?? ""}
           </Text>
           <Text style={metadataItemStyle}>
-            {doc.metadata.updatedAt
+            {doc.metadata?.updatedAt
               ? `${t("Updated")} ${textLibrary.date.toRelativeTime(
                   new Date(doc.metadata.updatedAt),
                 )}`
@@ -199,7 +207,7 @@ export function RenderTerms({ doc }: RenderTermsProps) {
               paddingLeft: isMobile ? "1rem" : "1.8rem",
               paddingRight: isMobile ? "1rem" : "1.8rem",
               borderRadius: sizes.borderRadius[20],
-              border: `2px solid ${colors.gray[8] + 50}`,
+              border: `2px solid ${hexToRgba(colors.gray[8], 0.5)}`,
             }}
           >
             {section.paragraphs.map((p, pi) => renderParagraph(p, pi))}
