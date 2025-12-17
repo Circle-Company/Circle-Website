@@ -1,5 +1,8 @@
 "use client";
 
+import React, { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
+
 import { Footer } from "@/sections/footer";
 import { Header } from "@/sections/header";
 import { Screen } from "@/components/screen";
@@ -9,6 +12,18 @@ import { useIsMobile } from "@/hooks/use.platform.detection";
 import { CSSProperties } from "react";
 import Image from "next/image";
 
+/**
+ * Objetivo:
+ * - Desktop: sem scroll (nem vertical nem horizontal) e sem cortar o Footer.
+ * - Mobile: apenas scroll vertical.
+ * - Calcular altura real do Header e Footer (renderizados) para reservar espaço correto.
+ *
+ * Estratégia:
+ * - Renderiza Header/Footer dentro de wrappers com refs.
+ * - Mede altura real via ResizeObserver (e fallback).
+ * - No desktop, o conteúdo principal ganha altura: calc(100vh - header - footer).
+ * - Mantém o Footer full-width sem ficar "preso" ao maxWidth do conteúdo.
+ */
 export default function Home() {
   const isMobile = useIsMobile();
 
@@ -102,7 +117,74 @@ export default function Home() {
         </div>
       </Screen>
 
-      <Footer />
-    </div>
-  );
+height={1400}
+                priority
+            />
+
+            {/* Mede o Header real (altura dinâmica via sizes/header.height) */}
+            <header
+                ref={headerRef as any}
+                style={{ position: "relative", zIndex: 1 }}
+            >
+                <Header />
+            </header>
+
+            <Screen>
+                <div
+                    style={{
+                        position: "relative",
+                        zIndex: 1,
+
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: isMobile ? "stretch" : "center",
+
+                        // Desktop: altura exata para não cortar footer e não ter scroll
+                        height: isMobile ? "auto" : desktopMainHeight,
+
+                        // Evita overflow horizontal gerando scroll
+                        overflowX: "hidden",
+
+                        // Desktop: não deixa estourar verticalmente (scroll travado)
+                        overflowY: isMobile ? "visible" : "hidden",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: isMobile ? "column" : "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+
+                            width: "100%",
+                            maxWidth: 1400,
+                            margin: "0 auto",
+                            paddingLeft: isMobile ? 10 : 60,
+                            paddingRight: isMobile ? 10 : 60,
+                            gap: isMobile ? 40 : 20,
+
+                            // Importantíssimo pra evitar que flex-children causem overflow no desktop
+                            minWidth: 0,
+                            overflowX: "hidden",
+                            overflowY: isMobile ? "visible" : "hidden",
+                        }}
+                    >
+                        <HomeCta />
+                        <HomeIllustration />
+                    </div>
+                </div>
+            </Screen>
+
+            {/* Mede o Footer real (altura pode mudar com wrap/idioma) */}
+            <footer
+                ref={footerRef as any}
+                style={{ position: "relative", zIndex: 1 }}
+            >
+                <div className="home-footer-full">
+                    <Footer />
+                </div>
+            </footer>
+        </div>
+    );
 }

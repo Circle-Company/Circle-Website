@@ -7,6 +7,8 @@ import { useIsMobile } from "@/hooks/use.platform.detection";
 import Image from "next/image";
 import { attachTimeline } from "framer-motion";
 
+type LangCode = "en" | "pt";
+
 export function HomeIllustration() {
   const { atualAppLanguage } = useLanguage();
   const isMobile = useIsMobile();

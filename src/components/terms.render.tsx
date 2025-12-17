@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use.platform.detection";
 import { CSSProperties } from "react";
 
 interface RenderTermsProps {
-  doc: TermsDocument;
+    doc: TermsDocument;
 }
 
 // Utilitário para cor com opacidade
@@ -143,22 +143,57 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     }
 
     return (
-      <div
-        key={index}
-        style={{
-          ...paragraphContainerStyle,
-          marginBottom: "0.5rem",
-          marginTop: "0.5rem",
-        }}
-      >
-        <Text style={paragraphWithTopicsStyle}>{paragraph.text}</Text>
-        {paragraph.topics && paragraph.topics.length > 0 && (
-          <div style={topicListContainerStyle}>
-            {paragraph.topics.map((topic, topicIndex) => (
-              <div key={topicIndex} style={topicItemStyle}>
-                <div style={topicBulletStyle} />
-                <Text style={topicTextStyle}>{topic}</Text>
-              </div>
+        <div style={contentContainerStyle}>
+            {/* Header Section */}
+            <div style={headerContainerStyle}>
+                <div style={{ marginBottom: sizes.margins[10] }}>
+                    <Text style={titleStyle}>{doc.title}</Text>
+                </div>
+
+                <div style={metadataContainerStyle}>
+                    <Text style={metadataItemStyle}>{doc.metadata.author}</Text>
+                    <Text style={metadataItemStyle}>
+                        {t("Version")} {doc.metadata.version}
+                    </Text>
+                    <Text style={metadataItemStyle}>
+                        {doc.metadata.updatedAt
+                            ? `${t("Updated")} ${textLibrary.date.toRelativeTime(
+                                  new Date(doc.metadata.updatedAt),
+                              )}`
+                            : ""}
+                    </Text>
+                </div>
+            </div>
+
+            {/* Content Sections */}
+            {doc.body.map((section, sectionIndex) => (
+                <div
+                    key={sectionIndex}
+                    style={{
+                        marginBottom: isMobile
+                            ? sizes.spaces[40]
+                            : sizes.spaces[70],
+                    }}
+                >
+                    <Text style={sectionTitleStyle}>{section.title}</Text>
+
+                    <div
+                        style={{
+                            marginTop: sizes.spaces[20],
+                            backgroundColor: colors.gray[9],
+                            paddingTop: "0.2rem",
+                            paddingBottom: "0.2rem",
+                            paddingLeft: isMobile ? "1rem" : "1.8rem",
+                            paddingRight: isMobile ? "1rem" : "1.8rem",
+                            borderRadius: sizes.borderRadius[20],
+                            border: `2px solid ${colors.gray[8] + 50}`,
+                        }}
+                    >
+                        {section.paragraphs.map((p, pi) =>
+                            renderParagraph(p, pi),
+                        )}
+                    </div>
+                </div>
             ))}
           </div>
         )}
@@ -214,7 +249,5 @@ export function RenderTerms({ doc }: RenderTermsProps) {
             {section.paragraphs.map((p, pi) => renderParagraph(p, pi))}
           </div>
         </div>
-      ))}
-    </div>
-  );
+    );
 }

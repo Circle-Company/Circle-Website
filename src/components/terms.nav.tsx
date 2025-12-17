@@ -5,54 +5,82 @@ import Link from "next/link";
 import { colors } from "@/constants/colors";
 import { useLanguage } from "@/contexts/language-context";
 
-export function TermsNav() {
-  const { t } = useLanguage();
-  const isMobile = useIsMobile();
-  const sizes = useSizes();
+const linkStyleBase = {
+    fontFamily: fonts.family.Semibold,
+    textDecoration: "none",
+    color: colors.gray[4],
+} as const;
 
-  return (
-    <nav
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: isMobile ? sizes.paddings[10] : sizes.spaces[30],
-        alignItems: "center",
-        justifyContent: "flex-end",
-      }}
-    >
-      <Link
-        href="/community-guidelines"
-        style={{
-          fontFamily: fonts.family.Semibold,
-          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
-          textDecoration: "none",
-          color: colors.gray[4],
-        }}
-      >
-        {t("Community Guidelines")}
-      </Link>
-      <Link
-        href="/terms-of-service"
-        style={{
-          fontFamily: fonts.family.Semibold,
-          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
-          textDecoration: "none",
-          color: colors.gray[4],
-        }}
-      >
-        {t("Terms of Service")}
-      </Link>
-      <Link
-        href="/privacy-policy"
-        style={{
-          fontFamily: fonts.family.Semibold,
-          fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
-          textDecoration: "none",
-          color: colors.gray[4],
-        }}
-      >
-        {t("Privacy Policy")}
-      </Link>
-    </nav>
-  );
+export function TermsNav() {
+    const { t } = useLanguage();
+    const isMobile = useIsMobile();
+    const sizes = useSizes();
+
+    return (
+        <nav
+            style={{
+                display: "flex",
+
+                // Mobile: empilha e centraliza para não quebrar "torto"
+                flexDirection: isMobile ? "column" : "row",
+                flexWrap: isMobile ? "nowrap" : "wrap",
+
+                gap: isMobile ? sizes.paddings[10] * 0.6 : sizes.spaces[30],
+                alignItems: isMobile ? "center" : "center",
+                justifyContent: isMobile ? "center" : "flex-end",
+                textAlign: isMobile ? "center" : "right",
+            }}
+        >
+            <Link
+                href="/community-guidelines"
+                style={{
+                    ...linkStyleBase,
+                    fontSize: isMobile
+                        ? fonts.size.body * 0.8
+                        : fonts.size.body,
+                    width: isMobile ? "100%" : "auto",
+                }}
+            >
+                {t("Community Guidelines")}
+            </Link>
+
+            <Link
+                href="/terms-of-service"
+                style={{
+                    ...linkStyleBase,
+                    fontSize: isMobile
+                        ? fonts.size.body * 0.8
+                        : fonts.size.body,
+                    width: isMobile ? "100%" : "auto",
+                }}
+            >
+                {t("Terms")}
+            </Link>
+
+            <Link
+                href="/privacy-policy"
+                style={{
+                    ...linkStyleBase,
+                    fontSize: isMobile
+                        ? fonts.size.body * 0.8
+                        : fonts.size.body,
+                    width: isMobile ? "100%" : "auto",
+                }}
+            >
+                {t("Privacy Policy")}
+            </Link>
+            <Link
+                href="/contact-us"
+                style={{
+                    ...linkStyleBase,
+                    fontSize: isMobile
+                        ? fonts.size.body * 0.8
+                        : fonts.size.body,
+                    width: isMobile ? "100%" : "auto",
+                }}
+            >
+                {t("Contact Us")}
+            </Link>
+        </nav>
+    );
 }
