@@ -25,6 +25,12 @@ export function Footer() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+
+                // Garante que o footer fique acima de qualquer overlay/elemento absoluto
+                // e permaneça clicável.
+                position: "relative",
+                zIndex: 9999,
+                pointerEvents: "auto",
             }}
         >
             <div

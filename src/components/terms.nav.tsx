@@ -1,83 +1,101 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+
 import { useSizes } from "@/constants/sizes";
 import fonts from "@/constants/fonts";
 import { useIsMobile } from "@/hooks/use.platform.detection";
-import Link from "next/link";
 import { colors } from "@/constants/colors";
 import { useLanguage } from "@/contexts/language-context";
 
-const linkStyleBase = {
+const linkStyleBase: React.CSSProperties = {
     fontFamily: fonts.family.Semibold,
     textDecoration: "none",
     color: colors.gray[4],
-} as const;
+    cursor: "pointer",
+};
 
 export function TermsNav() {
     const { t } = useLanguage();
     const isMobile = useIsMobile();
     const sizes = useSizes();
 
+    const linkStyle = (mobile: boolean): React.CSSProperties => ({
+        ...linkStyleBase,
+        fontSize: mobile ? fonts.size.body * 0.8 : fonts.size.body,
+        width: mobile ? "100%" : "auto",
+        textAlign: mobile ? "center" : "right",
+        display: "inline-block",
+
+        // Diagnostics (remove after fixing): helps see if something is covering the links
+        position: "relative",
+        zIndex: 100000,
+        pointerEvents: "auto",
+    });
+
+    const logPointer = (
+        label: string,
+        e:
+            | React.MouseEvent<HTMLAnchorElement>
+            | React.PointerEvent<HTMLAnchorElement>,
+    ) => {
+        // If you DON'T see these logs, the click isn't reaching the <a> (overlay is intercepting)
+        // If you DO see them but navigation doesn't happen, something is preventing default globally.
+        // eslint-disable-next-line no-console
+        console.log("[TermsNav]", label, "event", e.type);
+    };
+
     return (
         <nav
+            aria-label="Footer navigation"
             style={{
                 display: "flex",
-
-                // Mobile: empilha e centraliza para não quebrar "torto"
                 flexDirection: isMobile ? "column" : "row",
                 flexWrap: isMobile ? "nowrap" : "wrap",
-
                 gap: isMobile ? sizes.paddings[10] * 0.6 : sizes.spaces[30],
-                alignItems: isMobile ? "center" : "center",
+                alignItems: "center",
                 justifyContent: isMobile ? "center" : "flex-end",
                 textAlign: isMobile ? "center" : "right",
+
+                // Diagnostics: ensure nav itself is not blocked
+                position: "relative",
+                zIndex: 100000,
+                pointerEvents: "auto",
             }}
         >
             <Link
                 href="/community-guidelines"
-                style={{
-                    ...linkStyleBase,
-                    fontSize: isMobile
-                        ? fonts.size.body * 0.8
-                        : fonts.size.body,
-                    width: isMobile ? "100%" : "auto",
-                }}
+                style={linkStyle(isMobile)}
+                onPointerDown={(e) => logPointer("community-guidelines", e)}
+                onClick={(e) => logPointer("community-guidelines", e)}
             >
                 {t("Community Guidelines")}
             </Link>
 
             <Link
                 href="/terms-of-service"
-                style={{
-                    ...linkStyleBase,
-                    fontSize: isMobile
-                        ? fonts.size.body * 0.8
-                        : fonts.size.body,
-                    width: isMobile ? "100%" : "auto",
-                }}
+                style={linkStyle(isMobile)}
+                onPointerDown={(e) => logPointer("terms-of-service", e)}
+                onClick={(e) => logPointer("terms-of-service", e)}
             >
                 {t("Terms")}
             </Link>
 
             <Link
                 href="/privacy-policy"
-                style={{
-                    ...linkStyleBase,
-                    fontSize: isMobile
-                        ? fonts.size.body * 0.8
-                        : fonts.size.body,
-                    width: isMobile ? "100%" : "auto",
-                }}
+                style={linkStyle(isMobile)}
+                onPointerDown={(e) => logPointer("privacy-policy", e)}
+                onClick={(e) => logPointer("privacy-policy", e)}
             >
                 {t("Privacy Policy")}
             </Link>
+
             <Link
                 href="/contact-us"
-                style={{
-                    ...linkStyleBase,
-                    fontSize: isMobile
-                        ? fonts.size.body * 0.8
-                        : fonts.size.body,
-                    width: isMobile ? "100%" : "auto",
-                }}
+                style={linkStyle(isMobile)}
+                onPointerDown={(e) => logPointer("contact-us", e)}
+                onClick={(e) => logPointer("contact-us", e)}
             >
                 {t("Contact Us")}
             </Link>

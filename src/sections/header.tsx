@@ -56,53 +56,64 @@ export function Header() {
                             style={{ height: 32, width: "auto" }}
                             priority
                         />
+                        <Text
+                            style={{
+                                fontSize: fonts.size.title3,
+                                fontFamily: fonts.family["Black-Italic"],
+                                color: colors.gray.white,
+                            }}
+                        >
+                            Circle App
+                        </Text>
+                    </div>
+                </Link>
 
-        {!isMobile && (
-          <Button
-            action={async () => {
-              window.open(
-                "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
-                "_blank",
-                "noopener,noreferrer",
-              );
-            }}
-            style={{
-              height: sizes.button.height,
-              backgroundColor: colors.gray[8],
-              color: colors.gray.white,
-            }}
-            animation={{
-              enabled: true,
-              tap: {
-                scale: 0.9,
-                duration: 0.2,
-                bounciness: 8,
-              },
-              hover: {
-                scale: 1.05,
-                scaleDuration: 1,
-                colorDuration: 0.5,
-                scaleExitDuration: 0.6,
-                colorExitDuration: 0.2,
-                backgroundColor: colors.gray[1],
-                textColor: "#000000",
-              },
-            }}
-          >
-            <Text
-              style={{
-                fontSize: fonts.size.body,
-                fontFamily: fonts.family.Black,
-                fontStyle: "italic",
-                fontWeight: "bold",
-                color: "inherit",
-              }}
-            >
-              {t("Download App")}
-            </Text>
-          </Button>
-        )}
-      </div>
-    </header>
-  );
+                {!isMobile && (
+                    <Button
+                        action={async () => {
+                            window.open(
+                                "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
+                                "_blank",
+                                "noopener,noreferrer",
+                            );
+                        }}
+                        style={{
+                            height: sizes.button.height,
+                            backgroundColor: colors.gray[8],
+                            color: colors.gray.white,
+                        }}
+                        animation={{
+                            enabled: true,
+                            tap: {
+                                scale: 0.9,
+                                duration: 0.2,
+                                bounciness: 8,
+                            },
+                            hover: {
+                                scale: 1.05,
+                                scaleDuration: 1,
+                                colorDuration: 0.5,
+                                scaleExitDuration: 0.6,
+                                colorExitDuration: 0.2,
+                                backgroundColor: colors.gray[1],
+                                textColor: "#000000",
+                            },
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: fonts.size.body,
+                                fontFamily: fonts.family.Black,
+                                fontStyle: "italic",
+                                fontWeight: "bold",
+                                color: "inherit",
+                            }}
+                        >
+                            {t("Download App")}
+                        </Text>
+                    </Button>
+                )}
+            </div>
+        </header>
+    );
 }
