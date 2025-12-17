@@ -9,6 +9,7 @@ import { Text } from "@/components/themed";
 import { useLanguage } from "@/contexts/language-context";
 import { Button } from "./buttons/standart.animated";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
 function getFlagSrc(code: string) {
     switch (code) {
@@ -133,10 +134,12 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
                 style={atualLanguageContainer}
             >
                 {getFlagSrc(atualAppLanguage.code) && (
-                    <img
+                    <Image
                         src={getFlagSrc(atualAppLanguage.code)!}
                         alt=""
                         aria-hidden="true"
+                        width={Math.round((flagStyle.width as number) ?? 14)}
+                        height={Math.round((flagStyle.height as number) ?? 11)}
                         style={{
                             ...flagStyle,
                             marginTop: 2,
@@ -179,10 +182,18 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
                                     }}
                                 >
                                     {getFlagSrc(item.code) && (
-                                        <img
+                                        <Image
                                             src={getFlagSrc(item.code)!}
                                             alt=""
                                             aria-hidden="true"
+                                            width={Math.round(
+                                                (flagStyle.width as number) ??
+                                                    14,
+                                            )}
+                                            height={Math.round(
+                                                (flagStyle.height as number) ??
+                                                    11,
+                                            )}
                                             style={{
                                                 ...flagStyle,
                                                 scale: 1.2,

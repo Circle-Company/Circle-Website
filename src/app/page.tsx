@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import { Footer } from "@/sections/footer";
 import { Header } from "@/sections/header";
@@ -119,12 +120,15 @@ export default function Home() {
                 }}
             />
 
-            <img
+            <Image
                 src="/images/bg_desktop.png"
                 className="home-bg"
                 alt=""
                 aria-hidden="true"
                 draggable={false}
+                width={1400}
+                height={1400}
+                priority
             />
 
             {/* Mede o Header real (altura dinâmica via sizes/header.height) */}
