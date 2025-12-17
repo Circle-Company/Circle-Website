@@ -13,7 +13,7 @@
     "No filter, just authenticity": "Sem Filtro, só autênticidade",
     "Interactions all the time": "Interações o tempo todo",
     "The vibe that matches": "A vibe que combina",
-    "Download and make friends": "Baixe e faça amgios",
+    "Download and make friends": "Baixe e faça amigos",
     "Community Guidelines": "Diretrizes da Comunidade",
     "Terms of Service": "Termos de Serviço",
     "Privacy Policy": "Política de Privacidade",
@@ -21,5 +21,9 @@
     "Terms": "Termos",
     "Contact Title": "Fale com a gente",
     "Contact Description": "Para esclarecimento de dúvidas, solicitações de suporte ou propostas de parceria, entre em contato com nossa equipe pelo email abaixo.",
-    "Contact Hint": "Ao clicar, você será direcionado para o seu app email."
+    "Contact Hint": "Ao clicar, você será direcionado para o seu app email.",
+    "Not Found Title": "Página não encontrada",
+    "Not Found Description": "A página que você procura pode ter sido movida, renomeada ou não estar mais disponível.",
+    "Not Found CTA": "Voltar para o início",
+    "Not Found Hint": "Se você acredita que isso é um erro, entre em contato com a gente."
 }

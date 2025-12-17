@@ -21,5 +21,9 @@
     "Terms": "Terms",
     "Contact Title": "Contact us",
     "Contact Description": "For questions, support requests, or partnership proposals, please contact our team using the email below.",
-    "Contact Hint": "Tap the button to open your email app and send a message."
+    "Contact Hint": "Tap the button to open your email app and send a message.",
+    "Not Found Title": "Page not found",
+    "Not Found Description": "The page you are looking for may have been moved, renamed, or no longer exists.",
+    "Not Found CTA": "Back to home",
+    "Not Found Hint": "If you believe this is an error, please contact us."
 }
