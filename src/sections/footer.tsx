@@ -9,53 +9,68 @@ import fonts from "@/constants/fonts";
 import { useSizes } from "@/constants/sizes";
 
 export function Footer() {
-  const isMobile = useIsMobile();
-  const sizes = useSizes();
-  return (
-    <footer
-      style={{
-        width: "100vw",
-        height: isMobile ? sizes.footer.height * 1.4 : sizes.footer.height,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          width: "100vw",
-          maxWidth: isMobile ? "95vw" : "70vw",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: sizes.paddings[10],
-          paddingInline: sizes.paddings[20],
-          boxSizing: "border-box",
-          flexWrap: "wrap",
-          flexDirection: isMobile ? "column" : "row",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: isMobile ? sizes.paddings[10] * 0.3 : sizes.paddings[10],
-          }}
-        >
-          <Text
+    const isMobile = useIsMobile();
+    const sizes = useSizes();
+    return (
+        <footer
             style={{
-              fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
-              fontFamily: fonts.family.Semibold,
-              color: colors.gray[4],
+                width: "100vw",
+                // No mobile, a altura fixa estava causando "aperto" e sobreposição.
+                // Deixa a altura crescer conforme o conteúdo e adiciona padding.
+                height: isMobile ? "auto" : sizes.footer.height,
+                minHeight: isMobile
+                    ? sizes.footer.height * 1.4
+                    : sizes.footer.height,
+                paddingBlock: isMobile ? sizes.paddings[12] : 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
             }}
-          >
-            © 2025 Circle Company
-          </Text>
-          <LanguageSelector />
-        </div>
+        >
+            <div
+                style={{
+                    width: "100%",
+                    maxWidth: isMobile ? "95vw" : "70vw",
+                    display: "flex",
+                    alignItems: isMobile ? "stretch" : "center",
+                    justifyContent: isMobile ? "center" : "space-between",
+                    gap: isMobile ? sizes.paddings[12] : sizes.paddings[10],
+                    paddingInline: sizes.paddings[20],
+                    boxSizing: "border-box",
+                    // No mobile, evita wrap "estranho" e empilha com alinhamento consistente
+                    flexWrap: isMobile ? "nowrap" : "wrap",
+                    flexDirection: isMobile ? "column" : "row",
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: isMobile ? "center" : "flex-start",
+                        gap: isMobile
+                            ? sizes.paddings[10] * 0.6
+                            : sizes.paddings[10],
+                        // No mobile, centraliza e permite quebrar linha com espaçamento consistente
+                        flexWrap: isMobile ? "wrap" : "nowrap",
+                        textAlign: isMobile ? "center" : "left",
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: isMobile
+                                ? fonts.size.body * 0.8
+                                : fonts.size.body,
+                            fontFamily: fonts.family.Semibold,
+                            color: colors.gray[4],
+                        }}
+                    >
+                        © 2025 Circle Company
+                    </Text>
+                    <LanguageSelector />
+                </div>
 
-        <TermsNav />
-      </div>
-    </footer>
-  );
+                <TermsNav />
+            </div>
+        </footer>
+    );
 }
