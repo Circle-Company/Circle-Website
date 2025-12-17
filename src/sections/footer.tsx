@@ -21,7 +21,7 @@ export function Footer() {
                 minHeight: isMobile
                     ? sizes.footer.height * 1.4
                     : sizes.footer.height,
-                paddingBlock: isMobile ? sizes.paddings[12] : 0,
+                paddingBlock: isMobile ? sizes.paddings[10] : 0,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -34,7 +34,9 @@ export function Footer() {
                     display: "flex",
                     alignItems: isMobile ? "stretch" : "center",
                     justifyContent: isMobile ? "center" : "space-between",
-                    gap: isMobile ? sizes.paddings[12] : sizes.paddings[10],
+                    gap: isMobile
+                        ? sizes.paddings[10] * 1.2
+                        : sizes.paddings[10],
                     paddingInline: sizes.paddings[20],
                     boxSizing: "border-box",
                     // No mobile, evita wrap "estranho" e empilha com alinhamento consistente

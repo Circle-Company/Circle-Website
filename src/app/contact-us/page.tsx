@@ -123,13 +123,13 @@ export default function ContactUsPage() {
     const cardStyle: React.CSSProperties = {
         width: "100%",
         maxWidth: 980,
-        paddingInline: isMobile ? sizes.paddings[20] : sizes.paddings[30],
+        paddingInline: isMobile ? sizes.paddings[20] : sizes.paddings[28],
 
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: isMobile ? sizes.paddings[14] : sizes.paddings[20],
+        gap: isMobile ? sizes.paddings[15] : sizes.paddings[20],
         marginBottom: isMobile ? 0 : sizes.paddings[72],
 
         textAlign: "center",
