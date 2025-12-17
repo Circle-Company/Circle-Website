@@ -1,109 +1,156 @@
 "use client";
 
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+    type ReactNode,
 } from "react";
 import {
-  LANGUAGE_STORAGE_KEY,
-  defaultLanguage,
-  type Language,
+    LANGUAGE_STORAGE_KEY,
+    defaultLanguage,
+    type Language,
 } from "@/i18n/config";
 import { getMessage } from "@/i18n/translations";
 
 type LanguageOption = {
-  code: Language;
-  nativeName: string;
+    code: Language;
+    nativeName: string;
 };
 
 const LANGUAGE_OPTIONS: LanguageOption[] = [
-  { code: "en", nativeName: "English" },
-  { code: "pt", nativeName: "Português" },
+    { code: "en", nativeName: "English" },
+    { code: "pt", nativeName: "Português" },
 ];
 
+const SUPPORTED_LANGUAGES: Language[] = ["en", "pt"];
+
+function normalizeNavigatorLanguage(
+    lang: string | undefined | null,
+): Language | null {
+    if (!lang) return null;
+
+    // Exemplos: "pt-BR", "pt", "en-US"
+    const base = lang.toLowerCase().split("-")[0];
+
+    if (base === "pt") return "pt";
+    if (base === "en") return "en";
+
+    return null;
+}
+
+function detectBrowserLanguage(): Language | null {
+    if (typeof window === "undefined") return null;
+
+    const nav = window.navigator;
+
+    // Prioriza a lista de linguagens, quando disponível
+    const candidates: string[] =
+        Array.isArray(nav.languages) && nav.languages.length > 0
+            ? nav.languages
+            : [nav.language];
+
+    for (const candidate of candidates) {
+        const normalized = normalizeNavigatorLanguage(candidate);
+        if (normalized && SUPPORTED_LANGUAGES.includes(normalized))
+            return normalized;
+    }
+
+    return null;
+}
+
 interface LanguageContextValue {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
-  languagesList: LanguageOption[];
-  atualAppLanguage: LanguageOption;
-  changeAppLanguage: (code: Language) => void;
+    language: Language;
+    setLanguage: (lang: Language) => void;
+    t: (key: string) => string;
+    languagesList: LanguageOption[];
+    atualAppLanguage: LanguageOption;
+    changeAppLanguage: (code: Language) => void;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(
-  undefined
+    undefined,
 );
 
-interface LanguageProviderProps {   
-  children: ReactNode;
+interface LanguageProviderProps {
+    children: ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+    const [language, setLanguageState] = useState<Language>(defaultLanguage);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+    useEffect(() => {
+        if (typeof window === "undefined") return;
 
-    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (stored === "en" || stored === "pt") {
-      setLanguageState(stored);
-    }
-  }, []);
+        // 1) Se houver preferência salva, ela manda
+        const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+        if (stored === "en" || stored === "pt") {
+            setLanguageState(stored);
+            return;
+        }
 
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
+        // 2) Caso contrário, usa o idioma do navegador (se suportado)
+        const detected = detectBrowserLanguage();
+        if (detected) {
+            setLanguageState(detected);
+            window.localStorage.setItem(LANGUAGE_STORAGE_KEY, detected);
+            return;
+        }
 
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
-    }
-  }, []);
+        // 3) Fallback: defaultLanguage (config)
+        setLanguageState(defaultLanguage);
+    }, []);
 
-  const changeAppLanguage = useCallback(
-    (code: Language) => {
-      setLanguage(code);
-    },
-    [setLanguage],
-  );
+    const setLanguage = useCallback((lang: Language) => {
+        setLanguageState(lang);
 
-  const t = useCallback(
-    (key: string) => {
-      return getMessage(language, key);
-    },
-    [language]
-  );
+        if (typeof window !== "undefined") {
+            window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+        }
+    }, []);
 
-  const atualAppLanguage =
-    LANGUAGE_OPTIONS.find((option) => option.code === language) ??
-    LANGUAGE_OPTIONS[0];
+    const changeAppLanguage = useCallback(
+        (code: Language) => {
+            setLanguage(code);
+        },
+        [setLanguage],
+    );
 
-  return (
-    <LanguageContext.Provider
-      value={{
-        language,
-        setLanguage,
-        t,
-        languagesList: LANGUAGE_OPTIONS,
-        atualAppLanguage,
-        changeAppLanguage,
-      }}
-    >
-      {children}
-    </LanguageContext.Provider>
-  );
+    const t = useCallback(
+        (key: string) => {
+            return getMessage(language, key);
+        },
+        [language],
+    );
+
+    const atualAppLanguage =
+        LANGUAGE_OPTIONS.find((option) => option.code === language) ??
+        LANGUAGE_OPTIONS[0];
+
+    return (
+        <LanguageContext.Provider
+            value={{
+                language,
+                setLanguage,
+                t,
+                languagesList: LANGUAGE_OPTIONS,
+                atualAppLanguage,
+                changeAppLanguage,
+            }}
+        >
+            {children}
+        </LanguageContext.Provider>
+    );
 }
 
 export function useLanguage() {
-  const context = useContext(LanguageContext);
+    const context = useContext(LanguageContext);
 
-  if (!context) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
+    if (!context) {
+        throw new Error("useLanguage must be used within a LanguageProvider");
+    }
 
-  return context;
+    return context;
 }
-
-
