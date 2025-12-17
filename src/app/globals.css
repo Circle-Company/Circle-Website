@@ -35,8 +35,36 @@
 
 html,
 body {
+    width: 100vw;
     max-width: 100vw;
     overflow-x: hidden;
+    /* Hide scrollbars cross-browser */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Lock vertical scroll only on desktop */
+@media (min-width: 769px) {
+    html,
+    body {
+        height: 100vh;
+        max-height: 100vh;
+        overflow-y: hidden;
+    }
+}
+
+/* Allow vertical scroll on mobile */
+@media (max-width: 768px) {
+    html,
+    body {
+        height: auto;
+        max-height: none;
+        overflow-y: auto;
+    }
 }
 
 @font-face {

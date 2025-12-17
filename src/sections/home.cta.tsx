@@ -142,49 +142,55 @@ export function HomeCta() {
                 </div>
             </div>
 
-            <div
-                style={{
-                    marginTop: 30,
-                    width: isMobile ? "100%" : "auto",
-                    display: "flex",
-                    justifyContent: "center",
-                }}
-            >
-                <Button
-                    action={async () => console.log("Baixar app")}
-                    style={{
-                        height: sizes.button.height * 1.2,
-                        backgroundColor: colors.gray.white,
-                        color: colors.gray.black,
-                        borderRadius: 100,
-                    }}
-                    animation={{
-                        enabled: true,
-                        tap: { scale: 0.9, duration: 0.8, bounciness: 8 },
-                        hover: {
-                            scale: 1.1,
-                            scaleDuration: 1,
-                            colorDuration: 0.5,
-                            scaleExitDuration: 0.6,
-                            colorExitDuration: 0.2,
-                            backgroundColor: colors.purple[5],
-                            textColor: colors.gray.white,
-                        },
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: fonts.size.body * 1.4,
-                            fontFamily: fonts.family.Black,
-                            fontStyle: "italic",
-                            fontWeight: "bold",
-                            color: "inherit",
-                        }}
-                    >
-                        {t("Download and make friends")}
-                    </Text>
-                </Button>
-            </div>
-        </div>
-    );
+      <div
+        style={{
+          marginTop: 30,
+          width: isMobile ? "100%" : "auto",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Button
+          action={async () => {
+            window.open(
+              "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
+              "_blank",
+              "noopener,noreferrer",
+            );
+          }}
+          style={{
+            height: sizes.button.height * 1.2,
+            backgroundColor: colors.gray.white,
+            color: colors.gray.black,
+            borderRadius: 100,
+          }}
+          animation={{
+            enabled: true,
+            tap: { scale: 0.9, duration: 0.8, bounciness: 8 },
+            hover: {
+              scale: 1.1,
+              scaleDuration: 1,
+              colorDuration: 0.5,
+              scaleExitDuration: 0.6,
+              colorExitDuration: 0.2,
+              backgroundColor: colors.purple[5],
+              textColor: colors.gray.white,
+            },
+          }}
+        >
+          <Text
+            style={{
+              fontSize: fonts.size.body * 1.4,
+              fontFamily: fonts.family.Black,
+              fontStyle: "italic",
+              fontWeight: "bold",
+              color: "inherit",
+            }}
+          >
+            {t("Download and make friends")}
+          </Text>
+        </Button>
+      </div>
+    </div>
+  );
 }
