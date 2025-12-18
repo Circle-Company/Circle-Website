@@ -59,7 +59,9 @@ export function Header() {
                         <Text
                             style={{
                                 fontSize: fonts.size.title3,
-                                fontFamily: fonts.family["Black-Italic"],
+                                fontFamily: fonts.family.Black,
+                                fontStyle: "italic",
+                                fontWeight: "bold",
                                 color: colors.gray.white,
                             }}
                         >
