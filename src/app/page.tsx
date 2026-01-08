@@ -183,6 +183,31 @@ export default function Home() {
                     <div style={contentWrapStyle}>
                         <HomeCta />
                         <HomeIllustration />
+                        {isMobile && (
+                            <a
+                                href="https://apps.apple.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    marginTop: -50,
+                                    marginBottom: 20,
+                                    alignSelf: "center",
+                                    alignItems: "flex-start",
+                                }}
+                            >
+                                <Image
+                                    src="/icons/svg/download-on-app-store.svg"
+                                    alt="Download on App Store"
+                                    width={180}
+                                    height={60}
+                                    style={{
+                                        height: 30,
+                                        width: "auto",
+                                    }}
+                                    priority
+                                />
+                            </a>
+                        )}
                     </div>
                 </Screen>
             </main>
