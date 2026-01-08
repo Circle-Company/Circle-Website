@@ -74,7 +74,7 @@ export function Header() {
                     <Button
                         action={async () => {
                             window.open(
-                                "https://play.google.com/store/apps/details?id=com.circlecompany.circleapp",
+                                "https://apps.apple.com/",
                                 "_blank",
                                 "noopener,noreferrer",
                             );
@@ -102,17 +102,43 @@ export function Header() {
                             },
                         }}
                     >
-                        <Text
+                        <div
                             style={{
-                                fontSize: fonts.size.body,
-                                fontFamily: fonts.family.Black,
-                                fontStyle: "italic",
-                                fontWeight: "bold",
-                                color: "inherit",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
                             }}
                         >
-                            {t("Download App")}
-                        </Text>
+                            <Text
+                                style={{
+                                    fontSize: fonts.size.body,
+                                    fontFamily: fonts.family.Black,
+                                    fontStyle: "italic",
+                                    fontWeight: "bold",
+                                    color: "inherit",
+                                }}
+                            >
+                                {t("Download App")}
+                            </Text>
+                            <span
+                                aria-hidden="true"
+                                style={{
+                                    width: 18,
+                                    height: 18,
+                                    display: "block",
+                                    backgroundColor: "currentColor",
+                                    WebkitMaskImage:
+                                        "url(/icons/svg/apple-logo.svg)",
+                                    maskImage: "url(/icons/svg/apple-logo.svg)",
+                                    WebkitMaskRepeat: "no-repeat",
+                                    maskRepeat: "no-repeat",
+                                    WebkitMaskPosition: "center",
+                                    maskPosition: "center",
+                                    WebkitMaskSize: "contain",
+                                    maskSize: "contain",
+                                }}
+                            />
+                        </div>
                     </Button>
                 )}
             </div>
