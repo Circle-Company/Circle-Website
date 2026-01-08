@@ -72,7 +72,7 @@ export function Footer() {
                             color: colors.gray[4],
                         }}
                     >
-                        © 2025 Circle Company
+                        © 2025 Circle LLC
                     </Text>
                     <LanguageSelector />
                 </div>
