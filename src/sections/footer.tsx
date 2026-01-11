@@ -67,7 +67,7 @@ export function Footer() {
                         style={{
                             fontSize: isMobile
                                 ? fonts.size.body * 0.8
-                                : fonts.size.body,
+                                : fonts.size.body * 0.9,
                             fontFamily: fonts.family.Semibold,
                             color: colors.gray[4],
                         }}

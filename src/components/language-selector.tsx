@@ -60,7 +60,7 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
     const title: CSSProperties = {
         alignSelf: "center",
         fontFamily: fonts.family.Semibold,
-        fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body,
+        fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body * 0.95,
         color: colors.gray[4],
         textDecoration: "underline",
     };
