@@ -7,6 +7,7 @@
     "Updated": "Updated",
     "Unable to load community guidelines. Check your internet connection and try again.": "Unable to load community guidelines. Check your internet connection and try again.",
     "now": "now",
+
     "Download App": "Download App",
     "Connect with real people.": "Connect with real people.",
     "Drag, comment, and have fun...": "Drag, comment, and have fun...",
@@ -14,16 +15,138 @@
     "Interactions all the time": "Interactions all the time",
     "The vibe that matches": "The vibe that matches",
     "Download and make friends": "Download and make friends",
+
     "Community Guidelines": "Community Guidelines",
     "Terms of Service": "Terms of Service",
     "Privacy Policy": "Privacy Policy",
     "Contact Us": "Contact Us",
     "Terms": "Terms",
+
     "Contact Title": "Contact us",
+    "Help": "Help",
     "Contact Description": "For questions, support requests, or partnership proposals, please contact our team using the email below.",
     "Contact Hint": "Tap the button to open your email app and send a message.",
+
     "Not Found Title": "Page not found",
     "Not Found Description": "The page you are looking for may have been moved, renamed, or no longer exists.",
     "Not Found CTA": "Back to home",
-    "Not Found Hint": "If you believe this is an error, please contact us."
+    "Not Found Hint": "If you believe this is an error, please contact us.",
+
+    "This page redirects you to two common actions: reporting accounts and learning how to delete your account inside the app.": "This page redirects you to two common actions: reporting accounts and learning how to delete your account inside the app.",
+    "What do you need?": "What do you need?",
+
+    "Report": "Report",
+    "Report an account": "Report an account",
+    "Go to report": "Go to report",
+    "If you found suspicious behavior, impersonation, spam, or harassment, send a report to our team.": "If you found suspicious behavior, impersonation, spam, or harassment, send a report to our team.",
+
+    "Arrow": "→",
+
+    "Personal Data": "Personal Data",
+    "Access your personal data": "Access your personal data",
+    "If you want to access your personal data, see here how to do that.": "If you want to access your personal data, see here how to do that.",
+    "Go to export account data": "Go to export account data",
+
+    "Exclude account data": "Delete account",
+    "If you want to exclude your account from Circle App, see here how to do that.": "If you want to delete your Circle account, see here how to do that.",
+    "Go to exclude account": "Go to delete account",
+
+    "How to export your account data?": "How to export your account data?",
+    "To export your account data in the Circle app, follow these steps:": "To export your account data in the Circle app, follow these steps:",
+    "Export your account data in the app": "Export your account data in the app",
+
+    "How to delete your account?": "How to delete your account?",
+    "To delete your account in the Circle app, follow these steps:": "To delete your account in the Circle app, follow these steps:",
+    "For security reasons, this can only be done inside the app while you are logged into your account.": "For security reasons, this can only be done inside the app while you are logged into your account.",
+    "For security reasons, account deletion can only be done inside the app while you are logged into your account.": "For security reasons, account deletion can only be done inside the app while you are logged into your account.",
+
+    "Steps": "Steps",
+    "Open Settings": "Open Settings",
+    "In the tab bar (bottom navigation), tap the Settings tab to open the app settings.": "In the tab bar (bottom navigation), tap the Settings tab to open the app settings.",
+
+    "Go to Account": "Go to Account",
+    "Inside Settings, scroll if needed and open the Account section, where you manage account-related options.": "Inside Settings, scroll if needed and open the Account section, where you manage account-related options.",
+
+    "Open \"Personal Data\"": "Open \"Personal Data\"",
+    "Tap \"Personal Data\".": "Tap \"Personal Data\".",
+    "In the Account section, tap \"Personal Data\" to see export options related to your account information.": "In the Account section, tap \"Personal Data\" to see export options related to your account information.",
+
+    "Confirm export": "Confirm export",
+    "Tap \"Request export\".": "Tap \"Request export\".",
+    "Tap \"Request export\" to confirm. The app will start preparing your export.": "Tap \"Request export\" to confirm. The app will start preparing your export.",
+
+    "Open Logout": "Open Logout",
+    "Inside Settings, find the \"Logout\" section and tap it. The delete option is located at the very bottom of this flow.": "Inside Settings, find the \"Logout\" section and tap it. The delete option is located at the very bottom of this flow.",
+
+    "Choose “I want to delete my account”": "Choose “I want to delete my account”",
+    "On the Logout screen, scroll to the last option and tap \"I want to delete my account\".": "On the Logout screen, scroll to the last option and tap \"I want to delete my account\".",
+
+    "Confirm deletion": "Confirm deletion",
+    "On the next screen, tap the delete option again to confirm you want to proceed.": "On the next screen, tap the delete option again to confirm you want to proceed.",
+
+    "Final confirmation": "Final confirmation",
+    "A final confirmation dialog will appear. Confirm once more to complete the deletion.": "A final confirmation dialog will appear. Confirm once more to complete the deletion.",
+
+    "Delete your account in the app": "Delete your account in the app",
+    "Inside the Circle app, follow these steps:": "Inside the Circle app, follow these steps:",
+    "Open the app and go to your Profile.": "Open the app and go to your Profile.",
+    "Tap Settings.": "Tap Settings.",
+
+    "If you cannot access the app, use the contact option below so we can help you.": "If you cannot access the app, use the contact option below so we can help you.",
+    "Need more help?": "Need more help?",
+    "Contact us": "Contact us",
+
+    "Use this form to report an account for review. Please avoid sharing personal data. If you are in danger, contact local emergency services.": "Use this form to report an account for review. Please avoid sharing personal data. If you are in danger, contact local emergency services.",
+    "Back to Help": "Back to Help",
+    "Back to Home": "Back to Home",
+
+    "Report details": "Report details",
+    "Username": "Username",
+    "e.g. username": "e.g. username",
+    "Enter the username of the account being reported. Allowed: letters, numbers, '_' and '.'.": "Enter the username of the account being reported. Allowed: letters, numbers, '_' and '.'.",
+    "Enter the username of the account being reported (the person you are reporting). Allowed: letters, numbers, '_' and '.'.": "Enter the username of the account being reported (the person you are reporting). Allowed: letters, numbers, '_' and '.'.",
+
+    "Reason": "Reason",
+    "Select a reason": "Select a reason",
+    "Please choose a reason for the report.": "Please choose a reason for the report.",
+    "Choose the main reason for the report.": "Choose the main reason for the report.",
+    "Choose the main reason for the report. Pick the option that best matches the most serious issue you observed.": "Choose the main reason for the report. Pick the option that best matches the most serious issue you observed.",
+
+    "Description": "Description",
+    "Why this matters: a clear description helps our team review your report faster and more accurately. Include what happened, where in the app it happened (profile, chat, comments), and when (approximate date/time). Avoid personal/sensitive data.": "Why this matters: a clear description helps our team review your report faster and more accurately. Include what happened, where in the app it happened (profile, chat, comments), and when (approximate date/time). Avoid personal/sensitive data.",
+    "Add helpful context (what happened, where, when). Do not include sensitive personal data.": "Add helpful context (what happened, where, when). Do not include sensitive personal data.",
+
+    "Please enter the username to report.": "Please enter the username to report.",
+    "The username must be at least 4 characters long.": "The username must be at least 4 characters long.",
+    "Invalid username. Use only letters, numbers, '_' and '.'.": "Invalid username. Use only letters, numbers, '_' and '.'.",
+
+    "Please enter a description for the report.": "Please enter a description for the report.",
+    "Please enter at least 10 characters in the description.": "Please enter at least 10 characters in the description.",
+
+    "Thanks. Your report was submitted and will be reviewed.": "Thanks. Your report was submitted and will be reviewed.",
+    "We could not submit your report. Please try again.": "We could not submit your report. Please try again.",
+
+    "Submitting…": "Submitting…",
+    "Submit": "Submit",
+    "Cancel": "Cancel",
+    "What happens next?": "What happens next?",
+    "Our team reviews reports and may take action according to our policies. We may not be able to share the outcome of every report.": "Our team reviews reports and may take action according to our policies. We may not be able to share the outcome of every report.",
+    "Prefer email?": "Prefer email?",
+
+    "Spam": "Spam",
+    "Harassment": "Harassment",
+    "Impersonation": "Impersonation",
+    "Hate speech": "Hate speech",
+    "Violence": "Violence",
+    "Self-harm": "Self-harm",
+    "Scam": "Scam",
+    "Nudity or sexual content": "Nudity or sexual content",
+    "Child safety": "Child safety",
+    "Illegal goods": "Illegal goods",
+    "Doxxing or personal data": "Doxxing or personal data",
+    "Non-consensual content": "Non-consensual content",
+    "Fake account": "Fake account",
+    "Underage": "Underage",
+    "Ban evasion": "Ban evasion",
+    "Other": "Other"
 }

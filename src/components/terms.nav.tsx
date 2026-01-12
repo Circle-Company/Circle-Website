@@ -23,7 +23,7 @@ export function TermsNav() {
 
     const linkStyle = (mobile: boolean): React.CSSProperties => ({
         ...linkStyleBase,
-        fontSize: mobile ? fonts.size.body * 0.8 : fonts.size.body,
+        fontSize: mobile ? fonts.size.body * 0.8 : fonts.size.body * 0.9,
         width: mobile ? "100%" : "auto",
         textAlign: mobile ? "center" : "right",
         display: "inline-block",
@@ -53,7 +53,9 @@ export function TermsNav() {
                 display: "flex",
                 flexDirection: isMobile ? "column" : "row",
                 flexWrap: isMobile ? "nowrap" : "wrap",
-                gap: isMobile ? sizes.paddings[10] * 0.6 : sizes.spaces[30],
+                gap: isMobile
+                    ? sizes.paddings[10] * 0.6
+                    : sizes.spaces[30] * 0.8,
                 alignItems: "center",
                 justifyContent: isMobile ? "center" : "flex-end",
                 textAlign: isMobile ? "center" : "right",
@@ -98,6 +100,15 @@ export function TermsNav() {
                 onClick={(e) => logPointer("contact-us", e)}
             >
                 {t("Contact Us")}
+            </Link>
+            <Link
+                href="/help"
+                className="termsNavLink"
+                style={linkStyle(isMobile)}
+                onPointerDown={(e) => logPointer("help", e)}
+                onClick={(e) => logPointer("help", e)}
+            >
+                {t("Help")}
             </Link>
         </nav>
     );
