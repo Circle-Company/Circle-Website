@@ -14,7 +14,7 @@ import { colors } from "@/constants/colors";
 import fonts from "@/constants/fonts";
 import { useLanguage } from "@/contexts/language-context";
 
-export default function HelpPage() {
+export default function ExportAccountDataPage() {
     const { t } = useLanguage();
     const isMobile = useIsMobile();
     const sizes = useSizes();
@@ -33,13 +33,16 @@ export default function HelpPage() {
 
     const card: React.CSSProperties = {
         width: "100%",
-        backgroundColor: "rgba(255, 255, 255, 0.06)",
+        background:
+            "linear-gradient(180deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.045) 100%)",
         borderRadius: isMobile ? 18 : 24,
         padding: isMobile ? 16 : 28,
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         gap: isMobile ? 10 : 14,
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        boxShadow: "0 18px 42px rgba(0, 0, 0, 0.25)",
     };
 
     const title: React.CSSProperties = {
@@ -50,6 +53,7 @@ export default function HelpPage() {
         lineHeight: 1.05,
         color: colors.gray.white,
         textAlign: isMobile ? "center" : "left",
+        margin: 0,
     };
 
     const subtitle: React.CSSProperties = {
@@ -61,6 +65,7 @@ export default function HelpPage() {
         textAlign: isMobile ? "center" : "left",
         maxWidth: isMobile ? "100%" : 780,
         margin: 0,
+        lineHeight: 1.45,
     };
 
     const sectionTitle: React.CSSProperties = {
@@ -82,51 +87,82 @@ export default function HelpPage() {
         textAlign: isMobile ? "center" : "left",
     };
 
-    const linkCardBase: React.CSSProperties = {
-        textDecoration: "none",
-        display: "block",
+    const securityBox: React.CSSProperties = {
         width: "100%",
-        borderRadius: isMobile ? 16 : 18,
-        padding: isMobile ? 14 : 18,
-        backgroundColor: "rgba(255, 255, 255, 0.04)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        transition:
-            "transform 180ms ease, background-color 180ms ease, border-color 180ms ease",
+        borderRadius: 16,
+        padding: isMobile ? 12 : 14,
+        backgroundColor: "rgba(255, 193, 7, 0.10)",
+        border: "1px solid rgba(255, 193, 7, 0.22)",
         boxSizing: "border-box",
-        transform: "translateZ(0)",
-        willChange: "transform, border-color",
     };
 
-    const ctaRow: React.CSSProperties = {
-        display: "flex",
-        flexDirection: "column",
+    const securityText: React.CSSProperties = {
+        margin: 0,
+        fontFamily: fonts.family.Semibold ?? fonts.family.Medium,
+        fontSize: isMobile ? fonts.size.body * 0.9 : fonts.size.body,
+        color: colors.gray.white,
+        lineHeight: 1.45,
+        textAlign: isMobile ? "center" : "left",
+    };
+
+    const stepsGrid: React.CSSProperties = {
+        display: "grid",
+        gridTemplateColumns: "1fr",
         gap: isMobile ? 10 : 12,
-        marginTop: isMobile ? 4 : 6,
+        marginTop: 2,
     };
 
-    const ctaInner: React.CSSProperties = {
+    const stepCard: React.CSSProperties = {
+        width: "100%",
+        borderRadius: 16,
+        padding: isMobile ? 14 : 16,
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         gap: 8,
-        alignItems: isMobile ? "center" : "flex-start",
-        textAlign: isMobile ? "center" : "left",
     };
 
-    const ctaTitle: React.CSSProperties = {
+    const stepHeaderRow: React.CSSProperties = {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+    };
+
+    const stepNumberPill: React.CSSProperties = {
+        width: 28,
+        height: 28,
+        borderRadius: 999,
+        backgroundColor: "rgba(255, 255, 255, 0.10)",
+        border: "1px solid rgba(255, 255, 255, 0.12)",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: colors.gray.white,
+        fontFamily: fonts.family.Black,
+        fontSize: fonts.size.body * 0.8,
+        flex: "0 0 auto",
+    };
+
+    const stepTitle: React.CSSProperties = {
+        margin: 0,
         fontFamily: fonts.family.Black,
         fontStyle: "italic",
         fontWeight: "bold",
-        fontSize: isMobile
-            ? fonts.size.subheadline * 1.02
-            : fonts.size.subheadline * 1.15,
+        fontSize: isMobile ? fonts.size.body * 1.0 : fonts.size.body * 1.05,
         color: colors.gray.white,
-        textAlign: isMobile ? "center" : "left",
+        textAlign: "left",
+        lineHeight: 1.2,
     };
 
-    const ctaHint: React.CSSProperties = {
-        ...sectionBody,
-        color: colors.gray.white,
-        marginTop: 2,
+    const stepDesc: React.CSSProperties = {
+        margin: 0,
+        fontFamily: fonts.family.Semibold ?? fonts.family.Medium,
+        fontSize: isMobile ? fonts.size.body * 0.88 : fonts.size.body * 0.92,
+        color: colors.gray[4],
+        lineHeight: 1.55,
+        textAlign: "left",
     };
 
     const helperText: React.CSSProperties = {
@@ -177,12 +213,12 @@ export default function HelpPage() {
                             }}
                         >
                             <Text as="div" style={title}>
-                                {t("Help")}
+                                {t("How to export your account data?")}
                             </Text>
 
                             <Text as="p" style={subtitle}>
                                 {t(
-                                    "This page redirects you to two common actions: reporting accounts and learning how to delete your account inside the app.",
+                                    "To export your account data in the Circle app, follow these steps:",
                                 )}
                             </Text>
                             <Text as="p" style={helperText}>
@@ -195,114 +231,91 @@ export default function HelpPage() {
                                             "1px solid rgba(255,255,255,0.35)",
                                     }}
                                 >
-                                    {t("Back to Home")}
+                                    {t("Back to Help")}
                                 </Link>
                             </Text>
                         </div>
 
-                        <div style={card}>
+                        <div style={card} id="export-account-data">
+                            <div style={securityBox}>
+                                <Text as="p" style={securityText}>
+                                    {t(
+                                        "For security reasons, this can only be done inside the app while you are logged into your account.",
+                                    )}
+                                </Text>
+                            </div>
+
                             <Text as="div" style={sectionTitle}>
-                                {t("What do you need?")}
+                                {t("Steps")}
                             </Text>
 
-                            <div style={ctaRow}>
-                                <Link
-                                    href="/help/report-account"
-                                    style={linkCardBase}
-                                    className={
-                                        isMobile ? undefined : "help-link-card"
-                                    }
-                                    aria-label={t("Report an account")}
-                                >
-                                    <div style={ctaInner}>
-                                        <Text as="div" style={ctaTitle}>
-                                            {t("Report an account")}
-                                        </Text>
-
-                                        <Text
-                                            as="p"
-                                            style={{
-                                                ...sectionBody,
-                                                maxWidth: isMobile ? 520 : 780,
-                                            }}
-                                        >
-                                            {t(
-                                                "If you found suspicious behavior, impersonation, spam, or harassment, send a report to our team.",
-                                            )}
-                                        </Text>
-
-                                        <Text as="p" style={ctaHint}>
-                                            {t("Go to report")} {t("Arrow")}
+                            <div style={stepsGrid}>
+                                <div style={stepCard}>
+                                    <div style={stepHeaderRow}>
+                                        <span style={stepNumberPill}>1</span>
+                                        <Text as="p" style={stepTitle}>
+                                            {t("Open Settings")}
                                         </Text>
                                     </div>
-                                </Link>
-                            </div>
-                            <div style={ctaRow}>
-                                <Link
-                                    href="/help/export-account-data"
-                                    style={linkCardBase}
-                                    className={
-                                        isMobile ? undefined : "help-link-card"
-                                    }
-                                    aria-label={t("Personal Data")}
-                                >
-                                    <div style={ctaInner}>
-                                        <Text as="div" style={ctaTitle}>
-                                            {t("Access your personal data")}
-                                        </Text>
 
-                                        <Text
-                                            as="p"
-                                            style={{
-                                                ...sectionBody,
-                                                maxWidth: isMobile ? 520 : 780,
-                                            }}
-                                        >
-                                            {t(
-                                                "If you want to access your personal data, see here how to do that.",
-                                            )}
-                                        </Text>
+                                    <Text as="p" style={stepDesc}>
+                                        {t(
+                                            "In the tab bar (bottom navigation), tap the Settings tab to open the app settings.",
+                                        )}
+                                    </Text>
+                                </div>
 
-                                        <Text as="p" style={ctaHint}>
-                                            {t("Go to export account data")}{" "}
-                                            {t("Arrow")}
+                                <div style={stepCard}>
+                                    <div style={stepHeaderRow}>
+                                        <span style={stepNumberPill}>2</span>
+                                        <Text as="p" style={stepTitle}>
+                                            {t("Go to Account")}
                                         </Text>
                                     </div>
-                                </Link>
-                            </div>
-                            <div style={ctaRow}>
-                                <Link
-                                    href="/help/exclude-account"
-                                    style={linkCardBase}
-                                    className={
-                                        isMobile ? undefined : "help-link-card"
-                                    }
-                                    aria-label={t("Account")}
-                                >
-                                    <div style={ctaInner}>
-                                        <Text as="div" style={ctaTitle}>
-                                            {t("Exclude account data")}
-                                        </Text>
 
-                                        <Text
-                                            as="p"
-                                            style={{
-                                                ...sectionBody,
-                                                maxWidth: isMobile ? 520 : 780,
-                                            }}
-                                        >
-                                            {t(
-                                                "If you want to exclude your account from Circle App, see here how to do that.",
-                                            )}
-                                        </Text>
+                                    <Text as="p" style={stepDesc}>
+                                        {t(
+                                            "Inside Settings, scroll if needed and open the Account section, where you manage account-related options.",
+                                        )}
+                                    </Text>
+                                </div>
 
-                                        <Text as="p" style={ctaHint}>
-                                            {t("Go to exclude account")}{" "}
-                                            {t("Arrow")}
+                                <div style={stepCard}>
+                                    <div style={stepHeaderRow}>
+                                        <span style={stepNumberPill}>3</span>
+                                        <Text as="p" style={stepTitle}>
+                                            {t('Tap "Personal Data".')}
                                         </Text>
                                     </div>
-                                </Link>
+
+                                    <Text as="p" style={stepDesc}>
+                                        {t(
+                                            'In the Account section, tap "Personal Data" to see export options related to your account information.',
+                                        )}
+                                    </Text>
+                                </div>
+
+                                <div style={stepCard}>
+                                    <div style={stepHeaderRow}>
+                                        <span style={stepNumberPill}>4</span>
+                                        <Text as="p" style={stepTitle}>
+                                            {t('Tap "Request export".')}
+                                        </Text>
+                                    </div>
+
+                                    <Text as="p" style={stepDesc}>
+                                        {t(
+                                            'Tap "Request export" to confirm. The app will start preparing your export.',
+                                        )}
+                                    </Text>
+                                </div>
                             </div>
+
+                            <Text as="p" style={sectionBody}>
+                                {t(
+                                    "If you cannot access the app, use the contact option below so we can help you.",
+                                )}
+                            </Text>
                         </div>
 
                         <div
@@ -354,12 +367,6 @@ export default function HelpPage() {
                 }
                 .hide-scrollbar::-webkit-scrollbar-track {
                     background: transparent;
-                }
-
-                /* Desktop hover effect for help link cards */
-                .help-link-card:hover {
-                    transform: scale(1.02);
-                    border-color: rgba(255, 255, 255, 0.95);
                 }
             `}</style>
         </div>
