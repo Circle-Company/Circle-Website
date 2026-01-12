@@ -3,8 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
-import httpClient from "@/http";
+import { usersService } from "@/services/api/users";
+import {
+    ALLOWED_USER_ACCOUNT_REPORT_REASONS,
+    UserAccountReportReasonEnum,
+} from "@/services/api/users/types";
 
 import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
@@ -19,49 +24,20 @@ import { useLanguage } from "@/contexts/language-context";
 import { Button } from "@/components/buttons/standart.animated";
 import { AnimatePresence, motion } from "framer-motion";
 
+type ReportReason = UserAccountReportReasonEnum | null;
+
 /**
  * Denúncia anônima de conta (User Account Report)
- * - Enums usados pelo use case e persistência (migration).
+ * - Enum centralizado em `src/services/api/users/types.ts`
  */
-export enum UserAccountReportReasonEnum {
-    SPAM = "spam",
-    HARASSMENT = "harassment",
-    IMPERSONATION = "impersonation",
-    HATE_SPEECH = "hate_speech",
-    VIOLENCE = "violence",
-    SELF_HARM = "self_harm",
-    SCAM = "scam",
-    NUDITY_OR_SEXUAL_CONTENT = "nudity_or_sexual_content",
-    CHILD_SAFETY = "child_safety",
-    ILLEGAL_GOODS = "illegal_goods",
-    DOXXING_OR_PERSONAL_DATA = "doxxing_or_personal_data",
-    NON_CONSENSUAL_CONTENT = "non_consensual_content",
-    FAKE_ACCOUNT = "fake_account",
-    UNDERAGE = "underage",
-    BAN_EVASION = "ban_evasion",
-    OTHER = "other",
+
+const ALLOWED_REASONS = ALLOWED_USER_ACCOUNT_REPORT_REASONS;
+
+function hasSelectedReason(
+    reason: ReportReason,
+): reason is UserAccountReportReasonEnum {
+    return reason !== null;
 }
-
-const ALLOWED_REASONS: UserAccountReportReasonEnum[] = [
-    UserAccountReportReasonEnum.SPAM,
-    UserAccountReportReasonEnum.HARASSMENT,
-    UserAccountReportReasonEnum.IMPERSONATION,
-    UserAccountReportReasonEnum.HATE_SPEECH,
-    UserAccountReportReasonEnum.VIOLENCE,
-    UserAccountReportReasonEnum.SELF_HARM,
-    UserAccountReportReasonEnum.SCAM,
-
-    UserAccountReportReasonEnum.NUDITY_OR_SEXUAL_CONTENT,
-    UserAccountReportReasonEnum.CHILD_SAFETY,
-    UserAccountReportReasonEnum.ILLEGAL_GOODS,
-    UserAccountReportReasonEnum.DOXXING_OR_PERSONAL_DATA,
-    UserAccountReportReasonEnum.NON_CONSENSUAL_CONTENT,
-    UserAccountReportReasonEnum.FAKE_ACCOUNT,
-    UserAccountReportReasonEnum.UNDERAGE,
-    UserAccountReportReasonEnum.BAN_EVASION,
-
-    UserAccountReportReasonEnum.OTHER,
-];
 
 type ReportAccountPayload = {
     /**
@@ -73,15 +49,8 @@ type ReportAccountPayload = {
     /** Motivo principal */
     reason: UserAccountReportReasonEnum;
 
-    /** Detalhe opcional (texto livre). */
-    description?: string | null;
-
-    /**
-     * Metadados opcionais (privacy-safe).
-     * Ex.: { client: "mobile", appVersion: "1.2.3", locale: "pt-BR" }
-     * Não inclua IP, deviceId persistente, ou qualquer dado pessoal sem análise de privacidade.
-     */
-    metadata?: Record<string, unknown>;
+    /** Detalhe (texto livre). */
+    description: string;
 };
 
 function reasonLabel(reason: UserAccountReportReasonEnum): string {
@@ -150,14 +119,13 @@ function useOnClickOutside(
 }
 
 export default function ReportAccountPage() {
-    const { t } = useLanguage();
+    const { t, atualAppLanguage } = useLanguage();
     const isMobile = useIsMobile();
     const sizes = useSizes();
+    const searchParams = useSearchParams();
 
     const [username, setUsername] = React.useState("");
-    const [reason, setReason] = React.useState<UserAccountReportReasonEnum>(
-        UserAccountReportReasonEnum.SPAM,
-    );
+    const [reason, setReason] = React.useState<ReportReason>(null);
     const [description, setDescription] = React.useState("");
 
     const [includeMetadata, setIncludeMetadata] = React.useState(true);
@@ -177,33 +145,47 @@ export default function ReportAccountPage() {
     );
 
     const sanitizeUsernameInput = (raw: string): string => {
-        // allow only: a-z A-Z 0-9 _ .
-        let v = raw.replace(/[^a-zA-Z0-9_.]/g, "");
+        // allow only: a-z 0-9 _ .
+        // (we no longer block consecutive separators or trailing dots/underscores)
+        // also force lowercase: usernames must not contain uppercase letters
+        let v = raw.toLowerCase().replace(/[^a-z0-9_.]/g, "");
 
-        // disallow '.' at start
+        // allow passing "@username" via query param and still sanitize correctly
+        v = v.replace(/^@+/, "");
+
+        // disallow '.' at start (keep this, common constraint and avoids awkward usernames)
         v = v.replace(/^\.+/, "");
-
-        // collapse multiple underscores/dots (no "__" and no "..")
-        v = v.replace(/_+/g, "_");
-        v = v.replace(/\.+/g, ".");
-
-        // disallow '._' or '_.' sequences (treat as consecutive separators)
-        v = v.replace(/(\._|_\.)(?=.)/g, "_");
-
-        // disallow '.' at end
-        v = v.replace(/\.+$/, "");
 
         return v;
     };
 
     const isValidUsername = (value: string): boolean => {
         if (!value) return false;
-        if (value.startsWith(".") || value.endsWith(".")) return false;
-        if (/__/.test(value)) return false;
-        if (/\.\./.test(value)) return false;
-        if (/[^a-zA-Z0-9_.]/.test(value)) return false;
+        if (value.startsWith(".")) return false;
+        if (/[^a-z0-9_.]/.test(value)) return false;
+        // explicitly reject uppercase if it somehow bypasses sanitize
+        if (/[A-Z]/.test(value)) return false;
         return true;
     };
+
+    // Prefill username from URL query param (e.g. /help/report-account?username=john or ?u=john)
+    React.useEffect(() => {
+        if (!searchParams) return;
+
+        const raw =
+            searchParams.get("username") ??
+            searchParams.get("u") ??
+            searchParams.get("user") ??
+            "";
+
+        const prefilled = sanitizeUsernameInput(raw);
+
+        // Only prefill when there's a value and the user hasn't typed yet
+        if (prefilled && username.trim() === "") {
+            setUsername(prefilled);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
 
     const container: React.CSSProperties = {
         width: "100%",
@@ -478,9 +460,10 @@ export default function ReportAccountPage() {
 
     function collectPrivacySafeMetadata(): Record<string, unknown> {
         const locale =
-            typeof navigator !== "undefined" && navigator.language
+            atualAppLanguage?.code ??
+            (typeof navigator !== "undefined" && navigator.language
                 ? navigator.language
-                : "pt-BR";
+                : "en");
 
         const timezone =
             typeof Intl !== "undefined" && Intl.DateTimeFormat
@@ -525,18 +508,45 @@ export default function ReportAccountPage() {
         if (!isValidUsername(trimmedUsername)) {
             setStatus("error");
             setStatusMessage(
-                t(
-                    "Invalid username. Use only letters, numbers, '_' and '.', without '.' at the start/end and without '__' or '..'.",
-                ),
+                t("Invalid username. Use only letters, numbers, '_' and '.'."),
+            );
+            return;
+        }
+
+        if (trimmedUsername.length < 4) {
+            setStatus("error");
+            setStatusMessage(
+                t("Username needs to be at least 4 characters long."),
+            );
+            return;
+        }
+
+        if (!hasSelectedReason(reason)) {
+            setStatus("error");
+            setStatusMessage(t("Please choose a reason for the report."));
+            return;
+        }
+
+        const trimmedDescription = description.trim();
+        if (!trimmedDescription) {
+            setStatus("error");
+            setStatusMessage(t("Please enter a description for the report."));
+            return;
+        }
+
+        if (trimmedDescription.length < 10) {
+            setStatus("error");
+            setStatusMessage(
+                t("Please enter at least 10 characters in the description."),
             );
             return;
         }
 
         // Payload (matches the required curl format)
-        const requestBody = {
+        const requestBody: ReportAccountPayload = {
             username: trimmedUsername,
             reason,
-            description: description.trim() ? description.trim() : null,
+            description: trimmedDescription,
         };
 
         // Optional privacy-safe metadata (not required by the curl format)
@@ -548,14 +558,7 @@ export default function ReportAccountPage() {
         setStatusMessage("");
 
         try {
-            const acceptLanguage =
-                (metadata?.locale as string | undefined)?.split("-")[0] ?? "en";
-
-            await httpClient.post("/users/report", requestBody, {
-                headers: {
-                    "Accept-Language": acceptLanguage,
-                },
-            });
+            await usersService.reportAccount(requestBody);
 
             setStatus("success");
             setStatusMessage(
@@ -563,6 +566,7 @@ export default function ReportAccountPage() {
             );
 
             setUsername("");
+            setReason(null);
             setDescription("");
         } catch (err: any) {
             const apiMessage =
@@ -590,12 +594,29 @@ export default function ReportAccountPage() {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "flex-start",
+
+                        // Allow scrolling when content exceeds available viewport height
                         minHeight: isMobile
                             ? "auto"
                             : `calc(100vh - ${sizes.header.height}px - ${sizes.footer.height}px)`,
+                        maxHeight: isMobile
+                            ? "auto"
+                            : `calc(100vh - ${sizes.header.height}px - ${sizes.footer.height}px)`,
+                        overflowY: isMobile ? "visible" : "auto",
+                        overflowX: "hidden",
+
+                        // Hide scroll indicator (while keeping scroll enabled)
+                        scrollbarWidth: "none", // Firefox
+                        msOverflowStyle: "none", // IE/Edge legacy
                     }}
                 >
-                    <div style={container}>
+                    <div
+                        style={{
+                            ...container,
+                            // Hide scrollbars on WebKit browsers (Chrome/Safari)
+                        }}
+                        className="hide-scrollbar"
+                    >
                         <div
                             style={{
                                 display: "flex",
@@ -673,7 +694,7 @@ export default function ReportAccountPage() {
 
                                 <Text as="p" style={helperText}>
                                     {t(
-                                        "Enter the username of the account being reported (the person you are reporting). Allowed: letters, numbers, '_' and '.'. The '.' cannot be first/last and you cannot use '__' or '..'.",
+                                        "Enter the username of the account being reported (the person you are reporting). Allowed: letters, numbers, '_' and '.'.",
                                     )}
                                 </Text>
                             </div>
@@ -715,7 +736,9 @@ export default function ReportAccountPage() {
                                                 as="div"
                                                 style={dropdownValueText}
                                             >
-                                                {t(reasonLabel(reason))}
+                                                {reason === null
+                                                    ? t("Select a reason")
+                                                    : t(reasonLabel(reason))}
                                             </Text>
                                             <span
                                                 aria-hidden="true"
@@ -887,19 +910,42 @@ export default function ReportAccountPage() {
                                     {t("Submit")}
                                 </button>
 
-                                <Link
-                                    href="/help"
-                                    style={{
-                                        ...buttonSecondary,
-                                        textAlign: "center",
-                                        textDecoration: "none",
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    {t("Cancel")}
-                                </Link>
+                                {(() => {
+                                    const hasAnyInput =
+                                        username.trim() !== "" ||
+                                        reason !== null ||
+                                        description.trim() !== "";
+
+                                    const cancelDisabled =
+                                        status === "submitting" || !hasAnyInput;
+
+                                    return (
+                                        <Link
+                                            href="/help"
+                                            aria-disabled={cancelDisabled}
+                                            tabIndex={cancelDisabled ? -1 : 0}
+                                            style={{
+                                                ...buttonSecondary,
+                                                textAlign: "center",
+                                                textDecoration: "none",
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                opacity: cancelDisabled
+                                                    ? 0.45
+                                                    : 1,
+                                                cursor: cancelDisabled
+                                                    ? "not-allowed"
+                                                    : "pointer",
+                                                pointerEvents: cancelDisabled
+                                                    ? "none"
+                                                    : "auto",
+                                            }}
+                                        >
+                                            {t("Cancel")}
+                                        </Link>
+                                    );
+                                })()}
                             </div>
                         </form>
 
@@ -934,6 +980,20 @@ export default function ReportAccountPage() {
             </Screen>
 
             <Footer />
+
+            {/* Local CSS to hide scrollbars without disabling scroll */}
+            <style jsx global>{`
+                .hide-scrollbar::-webkit-scrollbar {
+                    width: 0px;
+                    height: 0px;
+                }
+                .hide-scrollbar::-webkit-scrollbar-thumb {
+                    background: transparent;
+                }
+                .hide-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+            `}</style>
         </div>
     );
 }
