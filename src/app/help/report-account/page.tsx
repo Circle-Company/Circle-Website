@@ -118,7 +118,7 @@ function useOnClickOutside(
     }, [ref, handler, when]);
 }
 
-export default function ReportAccountPage() {
+function ReportAccountPageInner() {
     const { t, atualAppLanguage } = useLanguage();
     const isMobile = useIsMobile();
     const sizes = useSizes();
@@ -995,5 +995,13 @@ export default function ReportAccountPage() {
                 }
             `}</style>
         </div>
+    );
+}
+
+export default function ReportAccountPage() {
+    return (
+        <React.Suspense fallback={null}>
+            <ReportAccountPageInner />
+        </React.Suspense>
     );
 }
