@@ -16,6 +16,15 @@ const nextConfig = {
 
         return config;
     },
+    async rewrites() {
+        return [
+            {
+                source: "/api/:path*",
+                destination:
+                    "https://circle-app-0d1288f2636e.herokuapp.com/:path*",
+            },
+        ];
+    },
 };
 
 export default nextConfig;
