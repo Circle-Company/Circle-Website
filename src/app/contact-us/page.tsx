@@ -87,7 +87,7 @@ export default function ContactUsPage() {
         };
     }, []);
 
-    const EMAIL = "contato@circleapp.com.br";
+    const EMAIL = "contact@circleapp.com.br";
     const mailto = `mailto:${EMAIL}`;
 
     const pageStyle: React.CSSProperties = {

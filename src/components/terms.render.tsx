@@ -12,7 +12,7 @@ interface RenderTermsProps {
     doc: TermsDocument;
 }
 
-// Utilitário para cor com opacidade
+// (Mantido) utilitário pode ser útil em outras variações de tema/estilo
 function hexToRgba(hex: string, alpha: number) {
     let c = hex.replace("#", "");
     if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
@@ -26,111 +26,126 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     const isMobile = useIsMobile();
     const sizes = useSizes();
 
-    // Header container
-    const headerContainerStyle = {
-        textAlign: "center" as const,
-        marginBottom: isMobile ? sizes.margins[20] : "3rem",
+    // Layout/Tipografia (visual sóbrio, sem fundos/bordas; foco em leitura)
+    const headerContainerStyle: CSSProperties = {
+        textAlign: "center",
+        marginBottom: isMobile ? sizes.spaces[20] : "3.5rem",
     };
 
-    const titleStyle = {
+    const titleStyle: CSSProperties = {
         fontSize: isMobile
-            ? fonts.size.extraLargeTitle * 0.9
-            : fonts.size.extraLargeTitle * 1.2,
+            ? fonts.size.extraLargeTitle * 0.85
+            : fonts.size.extraLargeTitle * 1.05,
         fontFamily: fonts.family.Black,
-
-        marginBottom: isMobile ? sizes.margins[28] : "6rem",
+        color: colors.gray[1],
+        lineHeight: "1.1",
+        letterSpacing: "-0.02em",
+        marginBottom: isMobile ? sizes.spaces[15] : "1.25rem",
     };
 
-    const metadataContainerStyle = {
-        width: isMobile ? "70vw" : "fit-content",
-        padding: isMobile ? "0.4rem 1.2rem" : "0.6rem 2rem",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: hexToRgba(colors.gray[8], 0.6),
-        borderRadius: sizes.borderRadius[20],
-        border: `2px solid ${hexToRgba(colors.gray[8], 0.9)}`,
-        textAlign: "center" as const,
-        alignSelf: "center",
+    // Metadados discretos em linha (sem “badge”, sem borda/fundo)
+    const metadataContainerStyle: CSSProperties = {
         display: "flex",
-        flexDirection: "row" as const,
-        gap: isMobile ? sizes.spaces[10] : "4rem",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: isMobile ? sizes.spaces[10] : sizes.spaces[15],
         margin: "0 auto",
+        maxWidth: isMobile ? "100%" : "720px",
     };
 
-    const metadataItemStyle = {
-        fontSize: fonts.size.body,
+    const metadataItemStyle: CSSProperties = {
+        fontSize: isMobile ? fonts.size.caption1 : fonts.size.body,
         fontFamily: fonts.family.Medium,
         color: colors.gray[4],
         lineHeight: "1.4",
+        whiteSpace: "nowrap",
     };
 
-    // Content wrapper
-    const contentContainerStyle = {
-        maxWidth: isMobile ? "100%" : "800px",
+    const metadataSeparatorStyle: CSSProperties = {
+        fontSize: isMobile ? fonts.size.caption1 : fonts.size.body,
+        fontFamily: fonts.family.Regular,
+        color: colors.gray[6],
+        lineHeight: "1.4",
+        padding: "0 0.25rem",
+        userSelect: "none",
+    };
+
+    // Content wrapper (largura confortável para leitura)
+    const contentContainerStyle: CSSProperties = {
+        maxWidth: isMobile ? "100%" : "880px",
         margin: "0 auto",
-        padding: isMobile ? `0 ${sizes.spaces[10]}px` : "0 1rem",
+        padding: isMobile ? `0 ${sizes.spaces[10]}px` : "0 1.25rem",
     };
 
-    const sectionTitleStyle = {
-        fontSize: isMobile ? fonts.size.title1 * 1 : fonts.size.title1,
+    const sectionTitleStyle: CSSProperties = {
+        fontSize: isMobile ? fonts.size.title1 * 0.95 : fonts.size.title1,
         fontFamily: fonts.family.Semibold,
-        marginTop: isMobile ? sizes.margins[10] : "1rem",
-        marginLeft: isMobile ? 20 : 20,
-        marginBottom: isMobile ? sizes.margins[20] : "4rem",
-        textAlign: (isMobile ? "center" : "left") as any,
+        color: colors.gray[2],
+        lineHeight: "1.25",
+        letterSpacing: "-0.01em",
+        marginTop: isMobile ? sizes.spaces[20] : "2.25rem",
+        marginBottom: isMobile ? sizes.spaces[15] : "1rem",
+        textAlign: (isMobile ? "left" : "left") as any,
     };
 
-    const paragraphContainerStyle = {
-        marginTop: isMobile ? sizes.margins[5] : "0.8rem",
-        marginBottom: isMobile ? sizes.margins[10] : "1.5rem",
+    // Parágrafos sem “cards”: apenas espaçamento e tipografia
+    const paragraphContainerStyle: CSSProperties = {
+        marginTop: 0,
+        marginBottom: isMobile ? sizes.spaces[15] : "1.1rem",
+        padding: 0,
+        backgroundColor: "transparent",
+        borderRadius: 0,
+        border: "none",
     };
 
-    const paragraphTextStyle = {
-        fontSize: fonts.size.callout,
+    const paragraphTextStyle: CSSProperties = {
+        fontSize: isMobile ? fonts.size.callout : fonts.size.callout,
         fontFamily: fonts.family.Regular,
-        lineHeight: "1.75",
+        lineHeight: "1.85",
         color: colors.gray[3],
-        marginBottom: "1rem",
-        textAlign: "left" as const,
+        margin: 0,
+        textAlign: "left",
     };
 
-    const paragraphWithTopicsStyle = {
-        fontSize: fonts.size.callout,
+    const paragraphWithTopicsStyle: CSSProperties = {
+        fontSize: isMobile ? fonts.size.callout : fonts.size.callout,
         fontFamily: fonts.family.Regular,
-        lineHeight: "1.75",
-        marginBottom: "0.75rem",
+        lineHeight: "1.85",
+        margin: 0,
         color: colors.gray[3],
     };
 
-    // Topic list styles
-    const topicListContainerStyle = {
-        marginTop: isMobile ? sizes.margins[15] : "2rem",
-        marginBottom: isMobile ? sizes.margins[20] : "3rem",
-        padding: isMobile ? "1rem" : "1.5rem",
+    // Lista de tópicos (mais compacta, com distinção sóbria e clara)
+    const topicListContainerStyle: CSSProperties = {
+        marginTop: isMobile ? sizes.spaces[10] : "0.65rem",
+        marginBottom: 0,
+        padding: 0,
+        paddingLeft: isMobile ? "0.6rem" : "0.85rem",
     };
 
     const topicItemStyle: CSSProperties = {
         display: "flex",
         alignItems: "flex-start",
-        marginBottom: "0.75rem",
-        paddingLeft: "0.5rem",
+        gap: isMobile ? "0.5rem" : "0.6rem",
+        marginTop: isMobile ? sizes.spaces[10] * 0.5 : "0.3rem",
     };
 
     const topicBulletStyle: CSSProperties = {
-        width: "6px",
-        height: "6px",
-        backgroundColor: colors.gray[4],
+        width: "5px",
+        height: "5px",
+        backgroundColor: colors.gray[5],
         borderRadius: "50%",
-        marginRight: "1rem",
         marginTop: "0.6rem",
         flexShrink: 0,
+        opacity: 0.95,
     };
 
     const topicTextStyle: CSSProperties = {
-        fontSize: fonts.size.callout,
+        fontSize: isMobile ? fonts.size.callout : fonts.size.callout,
         fontFamily: fonts.family.Regular,
         color: colors.gray[3],
-        lineHeight: "1.6",
+        margin: 0,
     };
 
     const renderParagraph = (paragraph: RawParagraph, index: number) => {
@@ -170,19 +185,35 @@ export function RenderTerms({ doc }: RenderTermsProps) {
                 </div>
 
                 <div style={metadataContainerStyle}>
-                    <Text style={metadataItemStyle}>
-                        {doc.metadata?.author ?? ""}
-                    </Text>
-                    <Text style={metadataItemStyle}>
-                        {t("Version")} {doc.metadata?.version ?? ""}
-                    </Text>
-                    <Text style={metadataItemStyle}>
-                        {doc.metadata?.updatedAt
-                            ? `${t("Updated")} ${textLibrary.date.toRelativeTime(
-                                  new Date(doc.metadata.updatedAt),
-                              )}`
-                            : ""}
-                    </Text>
+                    {!!doc.metadata?.author && (
+                        <Text style={metadataItemStyle}>
+                            {doc.metadata.author}
+                        </Text>
+                    )}
+
+                    {!!doc.metadata?.author && !!doc.metadata?.version && (
+                        <Text style={metadataSeparatorStyle}>•</Text>
+                    )}
+
+                    {!!doc.metadata?.version && (
+                        <Text style={metadataItemStyle}>
+                            {t("Version")} {doc.metadata.version}
+                        </Text>
+                    )}
+
+                    {(!!doc.metadata?.author || !!doc.metadata?.version) &&
+                        !!doc.metadata?.updatedAt && (
+                            <Text style={metadataSeparatorStyle}>•</Text>
+                        )}
+
+                    {!!doc.metadata?.updatedAt && (
+                        <Text style={metadataItemStyle}>
+                            {t("Updated")}{" "}
+                            {textLibrary.date.toRelativeTime(
+                                new Date(doc.metadata.updatedAt),
+                            )}
+                        </Text>
+                    )}
                 </div>
             </div>
 
@@ -197,23 +228,7 @@ export function RenderTerms({ doc }: RenderTermsProps) {
                     }}
                 >
                     <Text style={sectionTitleStyle}>{section.title}</Text>
-
-                    <div
-                        style={{
-                            marginTop: sizes.spaces[20],
-                            backgroundColor: colors.gray[9],
-                            paddingTop: "0.2rem",
-                            paddingBottom: "0.2rem",
-                            paddingLeft: isMobile ? "1rem" : "1.8rem",
-                            paddingRight: isMobile ? "1rem" : "1.8rem",
-                            borderRadius: sizes.borderRadius[20],
-                            border: `2px solid ${hexToRgba(colors.gray[8], 0.5)}`,
-                        }}
-                    >
-                        {section.paragraphs.map((p, pi) =>
-                            renderParagraph(p, pi),
-                        )}
-                    </div>
+                    {section.paragraphs.map((p, pi) => renderParagraph(p, pi))}
                 </div>
             ))}
         </div>
