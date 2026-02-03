@@ -157,7 +157,7 @@ export function HomeCta() {
                 <Button
                     action={async () => {
                         window.open(
-                            "https://apps.apple.com/",
+                            "https://testflight.apple.com/join/ZATKxY4d",
                             "_blank",
                             "noopener,noreferrer",
                         );
