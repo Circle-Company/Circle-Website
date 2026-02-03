@@ -185,7 +185,7 @@ export default function Home() {
                         <HomeIllustration />
                         {isMobile && (
                             <a
-                                href="https://apps.apple.com/"
+                                href="https://testflight.apple.com/join/ZATKxY4d"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
