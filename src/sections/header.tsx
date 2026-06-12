@@ -25,123 +25,36 @@ export function Header() {
                 justifyContent: "center",
             }}
         >
-            <div
-                style={{
-                    width: isMobile ? "100%" : "70%",
-                    maxWidth: isMobile ? "100%" : "70%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: isMobile ? "center" : "space-between",
-                    gap: sizes.paddings[10],
-                    paddingInline: sizes.paddings[10],
-                    boxSizing: "border-box",
-                    position: "relative",
-                }}
-            >
-                <Link href="/">
-                    <div
+            <Link href="/">
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                        margin: isMobile ? "0 auto" : undefined,
+                    }}
+                >
+                    <Image
+                        src="/icons/png/circleApp-iOS-Default-1024x1024@1x.png"
+                        alt="Circle Logo"
+                        width={34}
+                        height={34}
+                        style={{ height: 34, width: "auto" }}
+                        priority
+                    />
+                    <Text
                         style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 8,
-                            margin: isMobile ? "0 auto" : undefined,
-                        }}
-                    >
-                        <Image
-                            src="/icons/svg/icon_default_light.svg"
-                            alt="Circle Logo"
-                            width={32}
-                            height={32}
-                            style={{ height: 32, width: "auto" }}
-                            priority
-                        />
-                        <Text
-                            style={{
-                                fontSize: fonts.size.title3,
-                                fontFamily: fonts.family.Black,
-                                fontStyle: "italic",
-                                fontWeight: "bold",
-                                color: colors.gray.white,
-                            }}
-                        >
-                            Circle App
-                        </Text>
-                    </div>
-                </Link>
-
-                {!isMobile && (
-                    <Button
-                        action={async () => {
-                            window.open(
-                                "https://testflight.apple.com/join/ZATKxY4d",
-                                "_blank",
-                                "noopener,noreferrer",
-                            );
-                        }}
-                        style={{
-                            height: sizes.button.height,
-                            backgroundColor: colors.gray[8],
+                            fontSize: fonts.size.title3 * 1.2,
+                            fontFamily: fonts.family.Black,
+                            fontStyle: "italic",
                             color: colors.gray.white,
                         }}
-                        animation={{
-                            enabled: true,
-                            tap: {
-                                scale: 0.9,
-                                duration: 0.2,
-                                bounciness: 8,
-                            },
-                            hover: {
-                                scale: 1.05,
-                                scaleDuration: 1,
-                                colorDuration: 0.5,
-                                scaleExitDuration: 0.6,
-                                colorExitDuration: 0.2,
-                                backgroundColor: colors.gray[1],
-                                textColor: "#000000",
-                            },
-                        }}
                     >
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: fonts.size.body,
-                                    fontFamily: fonts.family.Black,
-                                    fontStyle: "italic",
-                                    fontWeight: "bold",
-                                    color: "inherit",
-                                }}
-                            >
-                                {t("Download App")}
-                            </Text>
-                            <span
-                                aria-hidden="true"
-                                style={{
-                                    width: 18,
-                                    height: 18,
-                                    display: "block",
-                                    backgroundColor: "currentColor",
-                                    WebkitMaskImage:
-                                        "url(/icons/svg/apple-logo.svg)",
-                                    maskImage: "url(/icons/svg/apple-logo.svg)",
-                                    WebkitMaskRepeat: "no-repeat",
-                                    maskRepeat: "no-repeat",
-                                    WebkitMaskPosition: "center",
-                                    maskPosition: "center",
-                                    WebkitMaskSize: "contain",
-                                    maskSize: "contain",
-                                }}
-                            />
-                        </div>
-                    </Button>
-                )}
-            </div>
+                        Circle App
+                    </Text>
+                </div>
+            </Link>
         </header>
     );
 }

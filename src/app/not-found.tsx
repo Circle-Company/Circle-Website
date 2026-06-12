@@ -12,7 +12,7 @@ import { colors } from "@/constants/colors";
 import fonts from "@/constants/fonts";
 import { useLanguage } from "@/contexts/language-context";
 import Image from "next/image";
-import { TermsNav } from "@/components/terms.nav";
+import { TermsNav } from "@/components/terms/terms.nav";
 
 export default function NotFoundPage() {
     const isMobile = useIsMobile();

@@ -13,8 +13,8 @@ import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
 import { Screen } from "@/components/screen";
 import { HomeCta } from "@/sections/home.cta";
-import { HomeIllustration } from "@/sections/home.illustration";
 import { useIsMobile } from "@/hooks/use.platform.detection";
+import { MomentsCarousel } from "@/sections/moments.carousel";
 
 /**
  * Home layout rules:
@@ -153,7 +153,7 @@ export default function Home() {
         flexDirection: isMobile ? "column" : "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: isMobile ? 40 : 40,
+        gap: isMobile ? 40 : 0,
         minWidth: 0,
 
         // Não clipa no desktop: clipping pode gerar hit-testing bizarro em algumas combinações de layout,
@@ -161,53 +161,75 @@ export default function Home() {
         overflow: isMobile ? "visible" : "visible",
     };
 
+    const moments = [
+        {
+            username: "@user1",
+            url: "https://www.pexels.com/download/video/12271150",
+            description: "Descrição do momento 1",
+            date: "10 minutes ago",
+        },
+        {
+            username: "@user2",
+            url: "https://www.pexels.com/download/video/34268294",
+            description: "Descrição do momento 2",
+            date: "4 hours ago",
+        },
+        {
+            username: "@user3",
+            url: "https://www.pexels.com/download/video/7366391",
+            description: "Descrição do momento 3",
+            date: "Yesterday",
+        },
+    ];
+
     return (
         <div style={pageStyle}>
-            {!isMobile && (
-                <Image
-                    src="/images/bg_desktop.png"
-                    alt="Background desktop"
-                    width={2000}
-                    height={2000}
-                    priority
-                    style={bgImageStyle}
-                />
-            )}
-
-            <div ref={headerRef} style={headerWrapStyle}>
-                <Header />
-            </div>
-
             <main style={mainStyle}>
                 <Screen>
                     <div style={contentWrapStyle}>
                         <HomeCta />
-                        <HomeIllustration />
-                        {isMobile && (
-                            <a
-                                href="https://testflight.apple.com/join/ZATKxY4d"
-                                target="_blank"
-                                rel="noopener noreferrer"
+
+                        <div
+                            style={{
+                                width: "100%",
+
+                                maxWidth: isMobile ? 360 : 620,
+                            }}
+                        >
+                            {/* Wrapper responsivo com aspect ratio fixo 1080x1674 */}
+                            <div
                                 style={{
-                                    marginTop: -50,
-                                    marginBottom: 20,
-                                    alignSelf: "center",
-                                    alignItems: "flex-start",
+                                    position: "relative",
+                                    width: isMobile ? "100%" : 800,
+                                    maxWidth: isMobile ? 400 : 800,
+                                    margin: isMobile ? "0 auto" : "0",
+                                    right: isMobile ? 0 : 100,
+                                    // requiredAspectRatio: { width: 1080, height: 1674 }
+                                    paddingTop: `${(1674 / 1080) * 100}%`,
+                                    overflow: "hidden",
+                                    WebkitMaskImage: isMobile
+                                        ? ""
+                                        : "linear-gradient(to right, transparent 0%, transparent 70%, black 95%, transparent 100%)",
+                                    maskImage: isMobile
+                                        ? ""
+                                        : "linear-gradient(to right, transparent 0%, transparent 25%, black 90%, transparent 100%)",
                                 }}
                             >
-                                <Image
-                                    src="/icons/svg/download-on-app-store.svg"
-                                    alt="Download on App Store"
-                                    width={180}
-                                    height={60}
+                                <div
                                     style={{
-                                        height: 30,
-                                        width: "auto",
+                                        position: "absolute",
+                                        inset: 0,
+                                        width: isMobile ? "100%" : 1100,
+                                        height: "100%",
                                     }}
-                                    priority
-                                />
-                            </a>
-                        )}
+                                >
+                                    <MomentsCarousel
+                                        moments={moments}
+                                        initialIndex={0}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Screen>
             </main>

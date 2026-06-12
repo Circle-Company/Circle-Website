@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useLayoutEffect, useRef, useState } from "react";
-import { Header } from "@/sections/header";
+import React, { useEffect } from "react";
 import { Footer } from "@/sections/footer";
-import { Screen } from "@/components/screen";
 import { AnimatedButton as Button } from "@/components/buttons/standart.animated";
 import { Text } from "@/components/themed";
 import { useIsMobile } from "@/hooks/use.platform.detection";
@@ -51,39 +49,31 @@ export default function ContactUsPage() {
     const sizes = useSizes();
     const { t } = useLanguage();
 
-    const headerRef = useRef<HTMLElement | null>(null);
-    const footerRef = useRef<HTMLElement | null>(null);
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
 
-    const [headerH, setHeaderH] = useState(0);
-    const [footerH, setFooterH] = useState(0);
+        const prevHtmlOverflowY = html.style.overflowY;
+        const prevBodyOverflowY = body.style.overflowY;
+        const prevHtmlHeight = html.style.height;
+        const prevBodyHeight = body.style.height;
+        const prevHtmlMaxHeight = html.style.maxHeight;
+        const prevBodyMaxHeight = body.style.maxHeight;
 
-    useLayoutEffect(() => {
-        const headerEl = headerRef.current;
-        const footerEl = footerRef.current;
-
-        const measure = () => {
-            if (headerEl)
-                setHeaderH(Math.ceil(headerEl.getBoundingClientRect().height));
-            if (footerEl)
-                setFooterH(Math.ceil(footerEl.getBoundingClientRect().height));
-        };
-
-        measure();
-
-        let ro: ResizeObserver | null = null;
-        if (typeof ResizeObserver !== "undefined") {
-            ro = new ResizeObserver(() => measure());
-            if (headerEl) ro.observe(headerEl);
-            if (footerEl) ro.observe(footerEl);
-        }
-
-        window.addEventListener("resize", measure);
-        window.addEventListener("orientationchange", measure);
+        html.style.overflowY = "auto";
+        body.style.overflowY = "auto";
+        html.style.height = "auto";
+        body.style.height = "auto";
+        html.style.maxHeight = "none";
+        body.style.maxHeight = "none";
 
         return () => {
-            window.removeEventListener("resize", measure);
-            window.removeEventListener("orientationchange", measure);
-            ro?.disconnect();
+            html.style.overflowY = prevHtmlOverflowY;
+            body.style.overflowY = prevBodyOverflowY;
+            html.style.height = prevHtmlHeight;
+            body.style.height = prevBodyHeight;
+            html.style.maxHeight = prevHtmlMaxHeight;
+            body.style.maxHeight = prevBodyMaxHeight;
         };
     }, []);
 
@@ -94,44 +84,48 @@ export default function ContactUsPage() {
         position: "relative",
         width: "100%",
         maxWidth: "100vw",
-
-        // Desktop: sem scroll; Mobile: scroll apenas vertical
-        overflowX: "hidden",
-        overflowY: isMobile ? "auto" : "hidden",
-        height: isMobile ? "auto" : "100vh",
+        height: "auto",
+        minHeight: "100vh",
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
     };
 
-    const contentHeightDesktop =
-        headerH > 0 || footerH > 0
-            ? `calc(100vh - ${headerH}px - ${footerH}px)`
-            : "calc(100vh - 72px - 96px)";
-
     const contentWrapStyle: React.CSSProperties = {
-        position: "relative",
-        zIndex: 1,
         width: "100%",
-
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
+        alignItems: "flex-start",
+        paddingBlock: isMobile ? sizes.paddings[20] : sizes.paddings[40],
+    };
 
-        // Desktop: ocupa exatamente o espaço entre header e footer (medidos)
-        height: isMobile ? "auto" : contentHeightDesktop,
-        paddingBlock: isMobile ? sizes.paddings[20] : 0,
+    const contentStyle: React.CSSProperties = {
+        width: "100%",
+        maxWidth: 980,
+        paddingInline: isMobile ? sizes.paddings[20] : sizes.paddings[28],
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: isMobile ? sizes.paddings[15] : sizes.paddings[20],
+        textAlign: "center",
     };
 
     const cardStyle: React.CSSProperties = {
         width: "100%",
-        maxWidth: 980,
-        paddingInline: isMobile ? sizes.paddings[20] : sizes.paddings[28],
-
+        maxWidth: 860,
+        backgroundColor: "rgba(255, 255, 255, 0.06)",
+        borderRadius: 24,
+        paddingTop: isMobile ? 18 : 50,
+        paddingBottom: isMobile ? 18 : 40,
+        paddingLeft: isMobile ? 18 : 50,
+        paddingRight: isMobile ? 18 : 50,
+        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: isMobile ? sizes.paddings[15] : sizes.paddings[20],
-        marginBottom: isMobile ? 0 : sizes.paddings[72],
-
+        gap: isMobile ? 14 : 18,
         textAlign: "center",
     };
 
@@ -157,197 +151,149 @@ export default function ContactUsPage() {
 
     return (
         <div style={pageStyle}>
-            <style
-                dangerouslySetInnerHTML={{
-                    __html: `
-/* Mantém o footer em largura total (100vw), mesmo dentro de wrappers centralizados */
-.contact-footer-full {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-}
-
-/* Hover do botão: deixa o container do ícone em cinza claro */
-.contact-email-button:hover .contact-email-icon {
-  background-color: rgba(255, 255, 255, 0.18) !important;
-}
-`,
-                }}
-            />
-
-            <header
-                ref={headerRef as any}
-                style={{ position: "relative", zIndex: 1 }}
-            >
-                <Header />
-            </header>
-
-            <Screen>
-                <div style={contentWrapStyle}>
+            <div style={contentWrapStyle}>
+                <div style={contentStyle}>
                     <div style={cardStyle}>
-                        <div
+                        <Text
+                            as="div"
                             style={{
-                                maxWidth: isMobile ? "100%" : 860,
-                                backgroundColor: "rgba(255, 255, 255, 0.06)",
-                                borderRadius: 24,
-                                paddingTop: isMobile ? 18 : 50,
-                                paddingBottom: isMobile ? 18 : 40,
-                                paddingLeft: isMobile ? 18 : 50,
-                                paddingRight: isMobile ? 18 : 50,
-                                boxSizing: "border-box",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: isMobile ? 14 : 18,
+                                fontFamily: fonts.family.Black,
+                                fontStyle: "italic",
+                                fontWeight: "bold",
+                                fontSize: isMobile
+                                    ? fonts.size.title1 * 1.2
+                                    : fonts.size.title1 * 1.6,
+                                lineHeight: 1.05,
                             }}
                         >
-                            <Text
-                                as="div"
-                                style={{
-                                    fontFamily: fonts.family.Black,
-                                    fontStyle: "italic",
-                                    fontWeight: "bold",
-                                    fontSize: isMobile
-                                        ? fonts.size.title1 * 1.2
-                                        : fonts.size.title1 * 1.6,
-                                    lineHeight: 1.05,
-                                }}
-                            >
-                                {t("Contact Title")}
-                            </Text>
+                            {t("Contact Title")}
+                        </Text>
 
-                            <Text
-                                as="p"
-                                style={{
-                                    fontFamily:
-                                        fonts.family.Medium ??
-                                        fonts.family.Semibold,
-                                    fontSize: isMobile
-                                        ? fonts.size.subheadline * 0.95
-                                        : fonts.size.subheadline,
-                                    color: colors.gray[4],
-                                    maxWidth: 600,
-                                }}
-                            >
-                                {t("Contact Description")}
-                            </Text>
+                        <Text
+                            as="p"
+                            style={{
+                                fontFamily:
+                                    fonts.family.Medium ??
+                                    fonts.family.Semibold,
+                                fontSize: isMobile
+                                    ? fonts.size.subheadline * 0.95
+                                    : fonts.size.subheadline,
+                                color: colors.gray[4],
+                                maxWidth: 700,
+                                lineHeight: 1.6,
+                                whiteSpace: "pre-line",
+                                textAlign: "center",
+                            }}
+                        >
+                            {t("Contact Description")}
+                        </Text>
 
-                            <a
-                                href={mailto}
+                        <a
+                            href={mailto}
+                            style={{
+                                textDecoration: "none",
+                                width: isMobile ? "100%" : "auto",
+                                maxWidth: isMobile ? 520 : "none",
+                            }}
+                        >
+                            <Button
+                                action={async () => {
+                                    // Mantém comportamento nativo do <a>. Nada a fazer aqui.
+                                }}
                                 style={{
-                                    textDecoration: "none",
-                                    width: isMobile ? "100%" : "auto",
-                                    maxWidth: isMobile ? 520 : "none",
+                                    ...buttonStyle,
+
+                                    // padding do botão (mantém altura/visual), o padding específico do ícone está no próprio span
+                                    paddingTop: sizes.paddings[20],
+                                    paddingBottom: sizes.paddings[20],
+                                    paddingLeft: 8,
+                                }}
+                                className="contact-email-button"
+                                animation={{
+                                    enabled: true,
+                                    tap: {
+                                        scale: 0.9,
+                                        duration: 0.8,
+                                        bounciness: 8,
+                                    },
+                                    hover: {
+                                        scale: 1.1,
+                                        scaleDuration: 1,
+                                        colorDuration: 0.5,
+                                        scaleExitDuration: 0.6,
+                                        colorExitDuration: 0.2,
+                                        backgroundColor: colors.purple[5],
+                                        textColor: colors.gray.white,
+                                    },
                                 }}
                             >
-                                <Button
-                                    action={async () => {
-                                        // Mantém comportamento nativo do <a>. Nada a fazer aqui.
-                                    }}
+                                <span
+                                    className="contact-email-icon"
                                     style={{
-                                        ...buttonStyle,
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        flexShrink: 0,
 
-                                        // padding do botão (mantém altura/visual), o padding específico do ícone está no próprio span
-                                        paddingTop: sizes.paddings[20],
-                                        paddingBottom: sizes.paddings[20],
-                                        paddingLeft: 8,
-                                    }}
-                                    className="contact-email-button"
-                                    animation={{
-                                        enabled: true,
-                                        tap: {
-                                            scale: 0.9,
-                                            duration: 0.8,
-                                            bounciness: 8,
-                                        },
-                                        hover: {
-                                            scale: 1.1,
-                                            scaleDuration: 1,
-                                            colorDuration: 0.5,
-                                            scaleExitDuration: 0.6,
-                                            colorExitDuration: 0.2,
-                                            backgroundColor: colors.purple[5],
-                                            textColor: colors.gray.white,
-                                        },
+                                        // margem do bloco do ícone: 5px topo/baixo/esquerda e 10px direita
+                                        marginTop: 5,
+                                        marginBottom: 5,
+                                        marginLeft: 5,
+                                        marginRight: 16,
+                                        padding: 6,
+                                        scale: 1.4,
+
+                                        // arredonda o "container" do ícone e remove qualquer aparência de outline
+                                        borderRadius: 999,
+                                        backgroundColor:
+                                            "rgba(255, 255, 255, 0.08)",
+                                        outline: "none",
+                                        border: "none",
+                                        boxShadow: "none",
+                                        overflow: "hidden",
                                     }}
                                 >
-                                    <span
-                                        className="contact-email-icon"
-                                        style={{
-                                            display: "inline-flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            flexShrink: 0,
+                                    <EmailIcon
+                                        size={isMobile ? 16 : 18}
+                                        color="currentColor"
+                                    />
+                                </span>
 
-                                            // margem do bloco do ícone: 5px topo/baixo/esquerda e 10px direita
-                                            marginTop: 5,
-                                            marginBottom: 5,
-                                            marginLeft: 5,
-                                            marginRight: 16,
-                                            padding: 6,
-                                            scale: 1.4,
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.family.Bold,
+                                        fontWeight: "bold",
+                                        fontSize: isMobile
+                                            ? fonts.size.body
+                                            : fonts.size.body * 1.4,
+                                        color: "inherit",
+                                    }}
+                                >
+                                    {EMAIL}
+                                </Text>
+                            </Button>
+                        </a>
 
-                                            // arredonda o "container" do ícone e remove qualquer aparência de outline
-                                            borderRadius: 999,
-                                            backgroundColor:
-                                                "rgba(255, 255, 255, 0.08)",
-                                            outline: "none",
-                                            border: "none",
-                                            boxShadow: "none",
-                                            overflow: "hidden",
-                                        }}
-                                    >
-                                        <EmailIcon
-                                            size={isMobile ? 16 : 18}
-                                            color="currentColor"
-                                        />
-                                    </span>
-
-                                    <Text
-                                        style={{
-                                            fontFamily: fonts.family.Bold,
-                                            fontWeight: "bold",
-                                            fontSize: isMobile
-                                                ? fonts.size.body
-                                                : fonts.size.body * 1.4,
-                                            color: "inherit",
-                                        }}
-                                    >
-                                        {EMAIL}
-                                    </Text>
-                                </Button>
-                            </a>
-
-                            <Text
-                                as="p"
-                                style={{
-                                    marginTop: 20,
-                                    fontFamily:
-                                        fonts.family.Medium ??
-                                        fonts.family.Semibold,
-                                    fontSize: isMobile
-                                        ? fonts.size.body * 0.85
-                                        : fonts.size.body * 1.1,
-                                    color: colors.gray[5],
-                                    maxWidth: 760,
-                                }}
-                            >
-                                {t("Contact Hint")}
-                            </Text>
-                        </div>
+                        <Text
+                            as="p"
+                            style={{
+                                marginTop: 20,
+                                fontFamily:
+                                    fonts.family.Medium ??
+                                    fonts.family.Semibold,
+                                fontSize: isMobile
+                                    ? fonts.size.body * 0.85
+                                    : fonts.size.body * 1.1,
+                                color: colors.gray[5],
+                                maxWidth: 760,
+                            }}
+                        >
+                            {t("Contact Hint")}
+                        </Text>
                     </div>
                 </div>
-            </Screen>
-
-            <footer
-                ref={footerRef as any}
-                style={{ position: "relative", zIndex: 1 }}
-            >
-                <div className="contact-footer-full">
-                    <Footer />
-                </div>
-            </footer>
+            </div>
+            <Footer />
         </div>
     );
 }

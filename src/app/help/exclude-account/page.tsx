@@ -275,24 +275,7 @@ export default function ExcludeAccountPage() {
 
                                     <Text as="p" style={stepDesc}>
                                         {t(
-                                            'Inside Settings, find the "Logout" section and tap it. The delete option is located at the very bottom of this flow.',
-                                        )}
-                                    </Text>
-                                </div>
-
-                                <div style={stepCard}>
-                                    <div style={stepHeaderRow}>
-                                        <span style={stepNumberPill}>3</span>
-                                        <Text as="p" style={stepTitle}>
-                                            {t(
-                                                "Choose “I want to delete my account”",
-                                            )}
-                                        </Text>
-                                    </div>
-
-                                    <Text as="p" style={stepDesc}>
-                                        {t(
-                                            'On the Logout screen, scroll to the last option and tap "I want to delete my account".',
+                                            'Inside Settings, find the "Delete Account" section and tap it. The delete option is located at the very bottom of this flow.',
                                         )}
                                     </Text>
                                 </div>
@@ -307,7 +290,7 @@ export default function ExcludeAccountPage() {
 
                                     <Text as="p" style={stepDesc}>
                                         {t(
-                                            "On the next screen, tap the delete option again to confirm you want to proceed.",
+                                            `Tap the "Delete Account" option again to confirm you want to proceed.`,
                                         )}
                                     </Text>
                                 </div>

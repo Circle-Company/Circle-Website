@@ -37,18 +37,14 @@ export function TermsContainer({ children, style }: ScreenProps) {
         width: isMobile ? "100vw" : "60vw",
         maxWidth: "100vw",
 
-        // ocupa apenas o espaço visível (descontando header e footer fixos)
-        height: `calc(100vh - var(--app-header-height, ${fallbackHeaderH}px) - var(--app-footer-height, ${fallbackFooterH}px))`,
-        minHeight: `calc(100vh - var(--app-header-height, ${fallbackHeaderH}px) - var(--app-footer-height, ${fallbackFooterH}px))`,
-        maxHeight: `calc(100vh - var(--app-header-height, ${fallbackHeaderH}px) - var(--app-footer-height, ${fallbackFooterH}px))`,
+        // altura e overflow livres para renderizar todo o conteúdo
+        height: "auto",
+        minHeight: "auto",
+        maxHeight: "none",
+        overflow: "visible",
 
         // padding não deve "estourar" o height
         boxSizing: "border-box",
-
-        // rolagem interna do conteúdo
-        overflowY: "auto",
-        overflowX: "hidden",
-        WebkitOverflowScrolling: "touch",
 
         display: "flex",
         flexDirection: "column",
@@ -57,34 +53,18 @@ export function TermsContainer({ children, style }: ScreenProps) {
         paddingRight: sizes.paddings[20],
         paddingTop: sizes.paddings[10],
 
-        // garante que o final do texto não fique por trás do footer fixo
-        // (extra pequeno apenas para respiro; a altura do footer já foi descontada acima)
+        // garante um respiro no final do texto
         paddingBottom: sizes.paddings[20],
-
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE and Edge
     } as CSSProperties;
 
     return (
-        <>
-            <style
-                dangerouslySetInnerHTML={{
-                    __html: `
-          .terms-container-no-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-        `,
-                }}
-            />
-            <div
-                className="terms-container-no-scrollbar"
-                style={{
-                    ...baseStyle,
-                    ...(style ?? {}),
-                }}
-            >
-                {children}
-            </div>
-        </>
+        <div
+            style={{
+                ...baseStyle,
+                ...(style ?? {}),
+            }}
+        >
+            {children}
+        </div>
     );
 }

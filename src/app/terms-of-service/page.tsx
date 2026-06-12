@@ -3,48 +3,49 @@
 import { Footer } from "@/sections/footer";
 import { Header } from "@/sections/header";
 import { Screen } from "@/components/screen";
-import { TermsContainer } from "@/components/terms.container";
-import { Error } from "@/components/error";
-import { Loading } from "@/components/loading";
-import { RenderTerms } from "@/components/terms.render";
+import { TermsContainer } from "@/components/terms/terms.container";
+import { TermsSidebar } from "@/sections/terms.sidebar";
 import { useTerms } from "@/contexts/terms-context";
+import { RenderTerms } from "@/components/terms/terms.render";
+import { Loading } from "@/components/loading";
+import { Error } from "@/components/error";
+import { useSizes } from "@/constants/sizes";
+import { useIsMobile } from "@/hooks/use.platform.detection";
 
 export default function TermsOfServicePage() {
     const { state } = useTerms();
+    const sizes = useSizes();
+    const isMobile = useIsMobile();
     const { termsOfService, loading, error } = state;
 
     return (
-        <div
-            style={{
-                position: "relative",
-                // usado pelo TermsContainer para calcular a altura disponível
-                ["--app-header-height" as any]: "72px",
-                ["--app-footer-height" as any]: "140px",
-            }}
-        >
+        <div>
             <Header />
-
             <Screen>
-                <TermsContainer>
-                    {error && <Error message={error} />}
-                    {loading && <Loading />}
-                    {!error && !loading && (
-                        <RenderTerms doc={termsOfService!} />
-                    )}
-                </TermsContainer>
+                <div
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "center",
+                        gap: 70,
+                    }}
+                >
+                    <div
+                        style={{ marginTop: isMobile ? 0 : sizes.margins[15] }}
+                    >
+                        <TermsSidebar />
+                    </div>
+                    <TermsContainer style={{ flex: 1, maxWidth: 900 }}>
+                        {error && <Error message={error} />}
+                        {loading && <Loading />}
+                        {!error && !loading && (
+                            <RenderTerms doc={termsOfService!} />
+                        )}
+                    </TermsContainer>
+                </div>
             </Screen>
-
-            <div
-                style={{
-                    position: "fixed",
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 50,
-                }}
-            >
-                <Footer />
-            </div>
+            <Footer />
         </div>
     );
 }
