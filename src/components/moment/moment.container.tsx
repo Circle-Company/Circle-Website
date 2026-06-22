@@ -12,6 +12,10 @@ export type MomentContainerProps = {
     topOverlay?: React.ReactNode;
     bottomOverlay?: React.ReactNode;
     overlayPadding?: number;
+    // Foco POR CARD. Quando definido, sobrepõe o valor do contexto (que é
+    // global). É o que garante que só o card em foco (sem blur) mostre o nome
+    // de usuário, o slider e os gradientes — cards borrados não exibem nada.
+    focused?: boolean;
 };
 
 export function MomentContainer({
@@ -20,8 +24,10 @@ export function MomentContainer({
     topOverlay,
     bottomOverlay,
     overlayPadding = 12,
+    focused: focusedProp,
 }: MomentContainerProps) {
-    const { focused } = useMomentContext();
+    const ctx = useMomentContext();
+    const focused = focusedProp ?? ctx.focused;
     const calculatedHeight = width * MOMENT_REQUIRED_RATIO;
 
     return (

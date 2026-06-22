@@ -33,6 +33,12 @@ type VideoRenderProps = Omit<
      * Default: true
      */
     focused?: boolean;
+
+    /**
+     * Intensidade do desfoque (em px) aplicado quando NÃO está focado.
+     * Default: 6
+     */
+    blurPx?: number;
 };
 
 /**
@@ -50,10 +56,12 @@ export const VideoRender = forwardRef<HTMLVideoElement, VideoRenderProps>(
             index,
             width = MOMENT_REQUIRED_WIDTH,
             focused = true,
+            blurPx = 6,
             style,
             autoPlay = false,
             playsInline = true,
             onLoadedMetadata,
+            onDurationChange,
             onTimeUpdate,
             ...videoProps
         },
@@ -63,22 +71,39 @@ export const VideoRender = forwardRef<HTMLVideoElement, VideoRenderProps>(
         const { setDurationMs, setCurrentTimeMs, isMuted } = useMomentContext();
         const hasIndex = typeof index === "number" && index >= 0;
 
+        // Grava a duração quando finita e > 0. Importante: os eventos
+        // loadedmetadata/durationchange podem disparar ANTES do React hidratar
+        // (o navegador começa a carregar o <video> do HTML do SSR antes dos
+        // handlers serem anexados), sendo perdidos. Por isso também chamamos
+        // isto no timeupdate, que dispara durante a reprodução já hidratado.
+        const syncDuration = (el: HTMLVideoElement) => {
+            if (!hasIndex) return;
+            const rawDuration = el.duration;
+            if (Number.isFinite(rawDuration) && rawDuration > 0) {
+                setDurationMs(index, rawDuration * 1000);
+            }
+        };
+
         const handleLoadedMetadata: React.VideoHTMLAttributes<HTMLVideoElement>["onLoadedMetadata"] =
             (event) => {
-                if (hasIndex) {
-                    const rawDuration = event.currentTarget.duration;
-                    const durationMs = Number.isFinite(rawDuration)
-                        ? rawDuration * 1000
-                        : 0;
-                    setDurationMs(index, durationMs);
-                }
+                syncDuration(event.currentTarget);
                 onLoadedMetadata?.(event);
+            };
+
+        const handleDurationChange: React.VideoHTMLAttributes<HTMLVideoElement>["onDurationChange"] =
+            (event) => {
+                syncDuration(event.currentTarget);
+                onDurationChange?.(event);
             };
 
         const handleTimeUpdate: React.VideoHTMLAttributes<HTMLVideoElement>["onTimeUpdate"] =
             (event) => {
                 if (hasIndex) {
-                    const rawCurrentTime = event.currentTarget.currentTime;
+                    const el = event.currentTarget;
+                    // Recupera a duração aqui também: os eventos de metadata
+                    // costumam disparar antes da hidratação e se perdem.
+                    syncDuration(el);
+                    const rawCurrentTime = el.currentTime;
                     if (Number.isFinite(rawCurrentTime)) {
                         setCurrentTimeMs(index, rawCurrentTime * 1000);
                     }
@@ -107,6 +132,7 @@ export const VideoRender = forwardRef<HTMLVideoElement, VideoRenderProps>(
                     muted={isMuted}
                     playsInline={playsInline}
                     onLoadedMetadata={handleLoadedMetadata}
+                    onDurationChange={handleDurationChange}
                     onTimeUpdate={handleTimeUpdate}
                     style={{
                         width: "100%",
@@ -115,8 +141,10 @@ export const VideoRender = forwardRef<HTMLVideoElement, VideoRenderProps>(
                         objectFit: "cover",
                         objectPosition: "center center",
                         pointerEvents: "none",
-                        filter: focused ? "none" : "blur(6px)",
-                        transition: "filter 240ms ease",
+                        filter: focused ? "none" : `blur(${blurPx}px)`,
+                        // Mesmo timing do slide/escala do carrossel: o vídeo
+                        // entra em foco em sincronia com o card assentando.
+                        transition: "filter 520ms cubic-bezier(0.22, 1, 0.36, 1)",
                         ...style,
                     }}
                     {...videoProps}

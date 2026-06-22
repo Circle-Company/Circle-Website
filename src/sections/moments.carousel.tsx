@@ -2,14 +2,10 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { VideoRender } from "@/components/moment/video.render";
-import { isMobile } from "react-device-detect";
 import { VideoSlider } from "@/components/moment/video.slider";
 import { MomentRoot } from "@/components/moment/moment.root";
 import { useMomentContext } from "@/components/moment/moment.context";
 import { MomentContainer } from "@/components/moment/moment.container";
-import { AudioControl } from "@/components/moment/moment.audio";
-import { Text } from "@/components/themed";
-import fonts from "@/constants/fonts";
 
 type Moment = {
     url: string;
@@ -21,20 +17,38 @@ type Moment = {
 type Props = {
     moments: Moment[];
     initialIndex?: number;
+    // Mesma detecção (por largura) usada na página, para evitar divergência
+    // com o react-device-detect (que é por user-agent).
+    isMobile: boolean;
 };
 
-export function MomentsCarousel({ moments, initialIndex = 0 }: Props) {
+// Timing único para todo o movimento do carrossel (slide, escala, opacidade e
+// blur do vídeo usam os mesmos valores) — é o que dá a sensação de fluidez:
+// nada "estala" mais rápido que o resto.
+const CAROUSEL_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+const CAROUSEL_TRANSITION_MS = 520;
+
+export function MomentsCarousel({
+    moments,
+    initialIndex = 0,
+    isMobile,
+}: Props) {
     return (
         <MomentRoot key={moments.length} count={moments.length}>
             <MomentsCarouselContent
                 moments={moments}
                 initialIndex={initialIndex}
+                isMobile={isMobile}
             />
         </MomentRoot>
     );
 }
 
-function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
+function MomentsCarouselContent({
+    moments,
+    initialIndex = 0,
+    isMobile,
+}: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const videoRefs = useRef<HTMLVideoElement[]>([]);
 
@@ -42,34 +56,41 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
 
     const [activeIndex, setActiveIndex] = useState(initialIndex);
 
-    const ITEM_WIDTH = isMobile ? 280 : 360;
-    const GAP = isMobile ? 20 : 80;
-    const FOCUSED_SCALE = isMobile ? 0.8 : 1.1;
-    const UNFOCUSED_SCALE = isMobile ? 0.6 : 0.8;
-
-    const [edgeGap, setEdgeGap] = useState(GAP);
+    // Mede a largura real do container para dimensionar o carrossel.
+    const [containerWidth, setContainerWidth] = useState(0);
 
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
 
-        const updateEdgeGap = () => {
-            const half = container.clientWidth / 2 - ITEM_WIDTH / 2;
-            setEdgeGap(Math.max(GAP, Math.floor(half)));
-        };
-
-        updateEdgeGap();
+        const update = () => setContainerWidth(container.clientWidth);
+        update();
 
         let ro: ResizeObserver | null = null;
         if (typeof ResizeObserver !== "undefined") {
-            ro = new ResizeObserver(updateEdgeGap);
+            ro = new ResizeObserver(update);
             ro.observe(container);
         }
 
         return () => {
             if (ro) ro.disconnect();
         };
-    }, [GAP, ITEM_WIDTH]);
+    }, []);
+
+    // Desktop: card fixo de 360px com os vizinhos "espiando" e desfocados.
+    // Mobile: o card focado ocupa toda a largura (full-bleed, um por vez),
+    // por isso a largura é derivada do container medido.
+    const ITEM_WIDTH = isMobile ? containerWidth || 280 : 360;
+    const GAP = isMobile ? 0 : 80;
+    const FOCUSED_SCALE = isMobile ? 1 : 1.1;
+    const UNFOCUSED_SCALE = isMobile ? 0.9 : 0.8;
+
+    // Padding nas pontas que centraliza o card ativo dentro do container.
+    // Quando o card ocupa a largura inteira (mobile), o resultado é 0.
+    const edgeGap =
+        containerWidth > 0
+            ? Math.max(0, Math.floor(containerWidth / 2 - ITEM_WIDTH / 2))
+            : GAP;
 
     const STEP = ITEM_WIDTH + GAP;
 
@@ -81,8 +102,26 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
             videoRefs.current.forEach((video, i) => {
                 if (!video) return;
                 if (i === index) {
+                    // Autoplay sem gesto do usuário só é permitido com o vídeo
+                    // MUDO no instante do play(). Garantimos isso aqui de forma
+                    // imperativa (o atributo `muted` via JSX do React às vezes
+                    // não chega a tempo). Sem o play, não há `timeupdate` e o
+                    // slider de progresso fica preso em 0% (invisível).
+                    video.muted = true;
+                    video.playsInline = true;
                     video.currentTime = 0;
-                    video.play().catch(() => {});
+                    const playPromise = video.play();
+                    if (playPromise && typeof playPromise.catch === "function") {
+                        // Se for rejeitado (ex.: ainda carregando), tenta de novo
+                        // assim que houver dados suficientes para tocar.
+                        playPromise.catch(() => {
+                            const retry = () => {
+                                video.removeEventListener("canplay", retry);
+                                video.play().catch(() => {});
+                            };
+                            video.addEventListener("canplay", retry);
+                        });
+                    }
                 } else {
                     video.pause();
                     video.currentTime = 0;
@@ -129,8 +168,7 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
                         paddingLeft: edgeGap,
                         paddingRight: edgeGap,
                         transform: `translateX(${offset}px)`,
-                        transition:
-                            "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)",
+                        transition: `transform ${CAROUSEL_TRANSITION_MS}ms ${CAROUSEL_EASING}`,
                         willChange: "transform",
                     }}
                 >
@@ -153,14 +191,15 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
                                         alignItems: "center",
                                         transform: `scale(${scale})`,
                                         transformOrigin: "center center",
-                                        transition:
-                                            "transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms cubic-bezier(0.22, 1, 0.36, 1)",
-                                        opacity: isActive ? 1 : 0.6,
+                                        transition: `transform ${CAROUSEL_TRANSITION_MS}ms ${CAROUSEL_EASING}, opacity ${CAROUSEL_TRANSITION_MS}ms ${CAROUSEL_EASING}`,
+                                        opacity: isActive ? 1 : 0.35,
+                                        willChange: "transform, opacity",
                                     }}
                                 >
                                     <MomentContainer
                                         width={ITEM_WIDTH}
                                         overlayPadding={0}
+                                        focused={isActive}
                                         topOverlay={
                                             <div
                                                 style={{
@@ -193,24 +232,6 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
                                                     boxSizing: "border-box",
                                                 }}
                                             >
-                                                <div
-                                                    style={{
-                                                        fontSize: 12,
-                                                        opacity: 0.9,
-                                                    }}
-                                                >
-                                                    {moment.description}
-                                                </div>
-                                                <Text
-                                                    style={{
-                                                        fontSize:
-                                                            fonts.size.body,
-                                                        opacity: 0.75,
-                                                        marginTop: 4,
-                                                    }}
-                                                >
-                                                    {moment.date}
-                                                </Text>
                                                 <VideoSlider
                                                     index={index}
                                                     style={{ marginTop: 12 }}
@@ -230,6 +251,7 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
                                             muted
                                             playsInline
                                             focused={isActive}
+                                            blurPx={isMobile ? 8 : 16}
                                             onEnded={
                                                 isActive
                                                     ? handleEnded
@@ -250,6 +272,11 @@ function MomentsCarouselContent({ moments, initialIndex = 0 }: Props) {
                 }
                 .moments-carousel__scroll::-webkit-scrollbar {
                     display: none;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .moments-carousel__track {
+                        transition: none !important;
+                    }
                 }
             `}</style>
         </>

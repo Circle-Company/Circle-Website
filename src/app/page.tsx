@@ -161,22 +161,63 @@ export default function Home() {
         overflow: isMobile ? "visible" : "visible",
     };
 
+    // Caixa do card (aspect ratio 1080x1674).
+    // - Desktop: caixa larga (1100px) que revela os DOIS vizinhos, com a
+    //   máscara desbotando ambos os lados e mantendo o centro opaco.
+    // - Mobile: dimensionada pela ALTURA para caber no viewport (card 100%
+    //   visível), nunca maior do que caberia na largura disponível. A largura
+    //   é derivada do aspect-ratio, então a proporção nunca distorce.
+    const momentBoxStyle: CSSProperties = isMobile
+        ? {
+              position: "relative",
+              aspectRatio: "1080 / 1674",
+              height: "min(72vh, calc(min(100vw - 20px, 360px) * 1674 / 1080))",
+              width: "auto",
+              maxWidth: "100%",
+              margin: "0 auto",
+              overflow: "hidden",
+          }
+        : {
+              position: "relative",
+              // Caixa larga (= container interno) para revelar AMBOS os vizinhos
+              // sem deslocar o card central, que continua em ~50% (box 550px).
+              width: 1100,
+              maxWidth: 1100,
+              margin: "0",
+              right: 100,
+              // requiredAspectRatio: { width: 1080, height: 1674 }
+              paddingTop: `${(1674 / 1080) * 100}%`,
+              overflow: "hidden",
+              // Desbota simetricamente os dois lados: os vizinhos (esq./dir.)
+              // dissolvem nas bordas e o miolo (~28%–72%, onde está o card em
+              // foco, que ocupa ~32%–68%) fica opaco — a transparência nunca o
+              // toca. O fade também esconde qualquer corte no limite do viewport.
+              WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, black 28%, black 72%, transparent 100%)",
+              maskImage:
+                  "linear-gradient(to right, transparent 0%, black 28%, black 72%, transparent 100%)",
+          };
+
+    // URLs apontam direto para renditions LEVES (não o /download/, que entrega
+    // 4K de até ~50 MB e faz o vídeo travar/bufferizar — o que congela o slider
+    // de progresso, pois `timeupdate` só dispara enquanto o vídeo toca).
+    // Em produção, use vídeos próprios já otimizados/comprimidos.
     const moments = [
         {
             username: "@user1",
-            url: "https://www.pexels.com/download/video/12271150",
+            url: "https://videos.pexels.com/video-files/12271150/12271150-hd_1280_720_25fps.mp4",
             description: "Descrição do momento 1",
             date: "10 minutes ago",
         },
         {
             username: "@user2",
-            url: "https://www.pexels.com/download/video/34268294",
+            url: "https://videos.pexels.com/video-files/34268294/14519774_2160_3840_60fps.mp4",
             description: "Descrição do momento 2",
             date: "4 hours ago",
         },
         {
             username: "@user3",
-            url: "https://www.pexels.com/download/video/7366391",
+            url: "https://videos.pexels.com/video-files/7366391/7366391-hd_1280_720_25fps.mp4",
             description: "Descrição do momento 3",
             date: "Yesterday",
         },
@@ -192,40 +233,32 @@ export default function Home() {
                         <div
                             style={{
                                 width: "100%",
-
                                 maxWidth: isMobile ? 360 : 620,
+                                position: "relative",
+                                // Desktop: carrossel vira fundo ambiente — atrás
+                                // do texto (z-index negativo, contido pelo main)
+                                // e em baixa opacidade. No mobile fica no fluxo
+                                // normal, abaixo do texto.
+                                zIndex: isMobile ? 0 : -1,
+                                opacity: isMobile ? 1 : 0.6,
                             }}
                         >
-                            {/* Wrapper responsivo com aspect ratio fixo 1080x1674 */}
-                            <div
-                                style={{
-                                    position: "relative",
-                                    width: isMobile ? "100%" : 800,
-                                    maxWidth: isMobile ? 400 : 800,
-                                    margin: isMobile ? "0 auto" : "0",
-                                    right: isMobile ? 0 : 100,
-                                    // requiredAspectRatio: { width: 1080, height: 1674 }
-                                    paddingTop: `${(1674 / 1080) * 100}%`,
-                                    overflow: "hidden",
-                                    WebkitMaskImage: isMobile
-                                        ? ""
-                                        : "linear-gradient(to right, transparent 0%, transparent 70%, black 95%, transparent 100%)",
-                                    maskImage: isMobile
-                                        ? ""
-                                        : "linear-gradient(to right, transparent 0%, transparent 25%, black 90%, transparent 100%)",
-                                }}
-                            >
+                            {/* Caixa com aspect ratio 1080x1674 (ver momentBoxStyle) */}
+                            <div style={momentBoxStyle}>
                                 <div
                                     style={{
                                         position: "absolute",
-                                        inset: 0,
-                                        width: isMobile ? "100%" : 1100,
+                                        top: 0,
+                                        bottom: 0,
+                                        left: 0,
                                         height: "100%",
+                                        width: isMobile ? "100%" : 1100,
                                     }}
                                 >
                                     <MomentsCarousel
                                         moments={moments}
                                         initialIndex={0}
+                                        isMobile={isMobile}
                                     />
                                 </div>
                             </div>

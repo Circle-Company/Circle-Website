@@ -21,6 +21,7 @@ export function MomentRoot({ children, count }: MomentRootProps) {
     const setDurationMs = useCallback((index: number, durationMs: number) => {
         setDurationsMs((prev) => {
             if (index < 0 || index >= prev.length) return prev;
+            if (prev[index] === durationMs) return prev;
             const next = [...prev];
             next[index] = durationMs;
             return next;
