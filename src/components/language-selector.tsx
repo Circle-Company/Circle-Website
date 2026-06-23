@@ -42,33 +42,34 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
     }
 
     const container: CSSProperties = {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
+        alignItems: isMobile ? "flex-start" : "center",
+        justifyContent: isMobile ? "flex-start" : "center",
     };
 
     const atualLanguageContainer: CSSProperties = {
-        display: "flex",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: isMobile ? "left" : "center",
+        gap: 4,
         opacity: showLanguageModal ? 0.4 : 1,
         cursor: "pointer",
         backgroundColor: "#00000000",
+        paddingInline: 4,
+        paddingBlock: 2,
     };
 
     const title: CSSProperties = {
         alignSelf: "center",
         fontFamily: fonts.family.Semibold,
-        fontSize: isMobile ? fonts.size.body * 0.8 : fonts.size.body * 0.95,
+        fontSize: isMobile ? fonts.size.body * 0.7 : fonts.size.body * 0.85,
         color: colors.gray[4],
         textDecoration: "underline",
+        whiteSpace: "nowrap",
     };
 
     const flagStyle: CSSProperties = {
-        width: FLAGWIDTH * 0.8,
-        height: FLAGHEIGHT * 0.8,
-        borderRadius: 4,
+        width: FLAGWIDTH * 0.7,
+        height: FLAGHEIGHT * 0.7,
+        borderRadius: 3,
         objectFit: "cover",
         overflow: "hidden",
         flexShrink: 0,
@@ -82,19 +83,16 @@ export function LanguageSelector({ preHandler }: { preHandler?: () => void }) {
         borderRadius: sizes.borderRadius[10] + 4,
         overflow: "hidden",
         backgroundColor: colors.gray.white,
-        padding: 6,
-
-        // sombra mais "premium" (camadas) + leve borda para destacar no fundo escuro
+        paddingInline: 4,
+        paddingBlock: 2,
+        minWidth: 80,
         boxShadow: "0 18px 48px rgba(0,0,0,0.45), 0 6px 18px rgba(0,0,0,0.25)",
         border: "1px solid rgba(0,0,0,0.08)",
-
-        minWidth: 150,
-        minHeight: 50,
     };
 
     const languageContainer: CSSProperties = {
-        paddingBlock: sizes.paddings[10] * 0.8,
-        paddingInline: sizes.paddings[20],
+        paddingBlock: sizes.paddings[10] * 0.5,
+        paddingInline: sizes.paddings[20] * 0.5,
         borderRadius: sizes.borderRadius[10],
         overflow: "hidden",
         border: "none",

@@ -1,5 +1,5 @@
 import { TermsDocument, RawParagraph } from "@/services/api/terms/types";
-import { Text } from "./themed";
+import { Text } from "../themed";
 import { useLanguage } from "@/contexts/language-context";
 import { useTextLibrary } from "@/hooks/use.text.library";
 import fonts from "@/constants/fonts";
@@ -7,6 +7,7 @@ import { colors } from "@/constants/colors";
 import { useSizes } from "@/constants/sizes";
 import { useIsMobile } from "@/hooks/use.platform.detection";
 import { CSSProperties } from "react";
+import Image from "next/image";
 
 interface RenderTermsProps {
     doc: TermsDocument;
@@ -28,71 +29,67 @@ export function RenderTerms({ doc }: RenderTermsProps) {
 
     // Layout/Tipografia (visual sóbrio, sem fundos/bordas; foco em leitura)
     const headerContainerStyle: CSSProperties = {
-        textAlign: "center",
-        marginBottom: isMobile ? sizes.spaces[20] : "3.5rem",
+        textAlign: isMobile ? "center" : "left",
+        marginBottom: isMobile ? sizes.spaces[20] : "2rem",
+        justifyContent: isMobile ? "center" : "flex-start",
+        alignItems: isMobile ? "center" : "flex-start",
     };
 
     const titleStyle: CSSProperties = {
         fontSize: isMobile
             ? fonts.size.extraLargeTitle * 0.85
-            : fonts.size.extraLargeTitle * 1.05,
+            : fonts.size.extraLargeTitle * 1.4,
         fontFamily: fonts.family.Black,
         color: colors.gray[1],
         lineHeight: "1.1",
         letterSpacing: "-0.02em",
         marginBottom: isMobile ? sizes.spaces[15] : "1.25rem",
+        textAlign: isMobile ? "center" : "left",
     };
 
     // Metadados discretos em linha (sem “badge”, sem borda/fundo)
     const metadataContainerStyle: CSSProperties = {
         display: "flex",
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: isMobile ? "center" : "flex-start",
         alignItems: "center",
         gap: isMobile ? sizes.spaces[10] : sizes.spaces[15],
-        margin: "0 auto",
         maxWidth: isMobile ? "100%" : "720px",
     };
 
     const metadataItemStyle: CSSProperties = {
-        fontSize: isMobile ? fonts.size.caption1 : fonts.size.body,
+        fontSize: isMobile ? fonts.size.caption1 : fonts.size.body * 1.4,
         fontFamily: fonts.family.Medium,
         color: colors.gray[4],
         lineHeight: "1.4",
         whiteSpace: "nowrap",
-    };
-
-    const metadataSeparatorStyle: CSSProperties = {
-        fontSize: isMobile ? fonts.size.caption1 : fonts.size.body,
-        fontFamily: fonts.family.Regular,
-        color: colors.gray[6],
-        lineHeight: "1.4",
-        padding: "0 0.25rem",
-        userSelect: "none",
+        textAlign: isMobile ? "center" : "left",
     };
 
     // Content wrapper (largura confortável para leitura)
     const contentContainerStyle: CSSProperties = {
         maxWidth: isMobile ? "100%" : "880px",
         margin: "0 auto",
-        padding: isMobile ? `0 ${sizes.spaces[10]}px` : "0 1.25rem",
+        padding: isMobile ? `0 ${sizes.spaces[10]}px` : "1rem",
+        height: "auto",
+        maxHeight: "none",
+        overflow: "visible",
     };
 
     const sectionTitleStyle: CSSProperties = {
-        fontSize: isMobile ? fonts.size.title1 * 0.95 : fonts.size.title1,
+        fontSize: isMobile ? fonts.size.title1 * 0.95 : fonts.size.title1 * 1.2,
         fontFamily: fonts.family.Semibold,
         color: colors.gray[2],
-        lineHeight: "1.25",
-        letterSpacing: "-0.01em",
-        marginTop: isMobile ? sizes.spaces[20] : "2.25rem",
-        marginBottom: isMobile ? sizes.spaces[15] : "1rem",
+        lineHeight: isMobile ? "1" : "1.25",
+        marginTop: isMobile ? sizes.spaces[20] : "0.5rem",
+        marginBottom: isMobile ? sizes.spaces[15] : sizes.spaces[10] * 0.05,
         textAlign: (isMobile ? "left" : "left") as any,
     };
 
     // Parágrafos sem “cards”: apenas espaçamento e tipografia
     const paragraphContainerStyle: CSSProperties = {
-        marginTop: 0,
-        marginBottom: isMobile ? sizes.spaces[15] : "1.1rem",
+        marginTop: sizes.margins[20],
+        marginBottom: isMobile ? sizes.spaces[10] : "0.6rem",
         padding: 0,
         backgroundColor: "transparent",
         borderRadius: 0,
@@ -102,16 +99,17 @@ export function RenderTerms({ doc }: RenderTermsProps) {
     const paragraphTextStyle: CSSProperties = {
         fontSize: isMobile ? fonts.size.callout : fonts.size.callout,
         fontFamily: fonts.family.Regular,
-        lineHeight: "1.85",
+        lineHeight: isMobile ? "1.4" : "1.85",
         color: colors.gray[3],
         margin: 0,
-        textAlign: "left",
+        textAlign: isMobile ? "justify" : "left",
     };
 
     const paragraphWithTopicsStyle: CSSProperties = {
         fontSize: isMobile ? fonts.size.callout : fonts.size.callout,
         fontFamily: fonts.family.Regular,
-        lineHeight: "1.85",
+        lineHeight: isMobile ? "1.4" : "1.85",
+        textAlign: isMobile ? "justify" : "left",
         margin: 0,
         color: colors.gray[3],
     };
@@ -180,32 +178,23 @@ export function RenderTerms({ doc }: RenderTermsProps) {
         <div style={contentContainerStyle}>
             {/* Header Section */}
             <div style={headerContainerStyle}>
-                <div style={{ marginBottom: sizes.margins[10] }}>
+                <Image
+                    src="/icons/png/circleApp-iOS-Default-1024x1024@1x.png"
+                    alt="Circle Logo"
+                    width={55}
+                    height={55}
+                    style={{
+                        height: 55,
+                        width: "auto",
+                        marginBottom: sizes.margins[20],
+                    }}
+                    priority
+                />
+                <div style={{ marginBottom: sizes.margins[5] }}>
                     <Text style={titleStyle}>{doc.title}</Text>
                 </div>
 
                 <div style={metadataContainerStyle}>
-                    {!!doc.metadata?.author && (
-                        <Text style={metadataItemStyle}>
-                            {doc.metadata.author}
-                        </Text>
-                    )}
-
-                    {!!doc.metadata?.author && !!doc.metadata?.version && (
-                        <Text style={metadataSeparatorStyle}>•</Text>
-                    )}
-
-                    {!!doc.metadata?.version && (
-                        <Text style={metadataItemStyle}>
-                            {t("Version")} {doc.metadata.version}
-                        </Text>
-                    )}
-
-                    {(!!doc.metadata?.author || !!doc.metadata?.version) &&
-                        !!doc.metadata?.updatedAt && (
-                            <Text style={metadataSeparatorStyle}>•</Text>
-                        )}
-
                     {!!doc.metadata?.updatedAt && (
                         <Text style={metadataItemStyle}>
                             {t("Updated")}{" "}
@@ -223,8 +212,8 @@ export function RenderTerms({ doc }: RenderTermsProps) {
                     key={sectionIndex}
                     style={{
                         marginBottom: isMobile
-                            ? sizes.spaces[40]
-                            : sizes.spaces[70],
+                            ? sizes.spaces[30]
+                            : sizes.spaces[40],
                     }}
                 >
                     <Text style={sectionTitleStyle}>{section.title}</Text>

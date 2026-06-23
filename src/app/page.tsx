@@ -13,8 +13,8 @@ import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
 import { Screen } from "@/components/screen";
 import { HomeCta } from "@/sections/home.cta";
-import { HomeIllustration } from "@/sections/home.illustration";
 import { useIsMobile } from "@/hooks/use.platform.detection";
+import { MomentsCarousel } from "@/sections/moments.carousel";
 
 /**
  * Home layout rules:
@@ -153,7 +153,7 @@ export default function Home() {
         flexDirection: isMobile ? "column" : "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: isMobile ? 40 : 40,
+        gap: isMobile ? 40 : 0,
         minWidth: 0,
 
         // Não clipa no desktop: clipping pode gerar hit-testing bizarro em algumas combinações de layout,
@@ -161,53 +161,108 @@ export default function Home() {
         overflow: isMobile ? "visible" : "visible",
     };
 
+    // Caixa do card (aspect ratio 1080x1674).
+    // - Desktop: caixa larga (1100px) que revela os DOIS vizinhos, com a
+    //   máscara desbotando ambos os lados e mantendo o centro opaco.
+    // - Mobile: dimensionada pela ALTURA para caber no viewport (card 100%
+    //   visível), nunca maior do que caberia na largura disponível. A largura
+    //   é derivada do aspect-ratio, então a proporção nunca distorce.
+    const momentBoxStyle: CSSProperties = isMobile
+        ? {
+              position: "relative",
+              aspectRatio: "1080 / 1674",
+              height: "min(72vh, calc(min(100vw - 20px, 360px) * 1674 / 1080))",
+              width: "auto",
+              maxWidth: "100%",
+              margin: "0 auto",
+              overflow: "hidden",
+          }
+        : {
+              position: "relative",
+              // Caixa larga (= container interno) para revelar AMBOS os vizinhos
+              // sem deslocar o card central, que continua em ~50% (box 550px).
+              width: 1100,
+              maxWidth: 1100,
+              margin: "0",
+              right: 100,
+              // requiredAspectRatio: { width: 1080, height: 1674 }
+              paddingTop: `${(1674 / 1080) * 100}%`,
+              overflow: "hidden",
+              // Desbota simetricamente os dois lados: os vizinhos (esq./dir.)
+              // dissolvem nas bordas e o miolo (~28%–72%, onde está o card em
+              // foco, que ocupa ~32%–68%) fica opaco — a transparência nunca o
+              // toca. O fade também esconde qualquer corte no limite do viewport.
+              WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, black 28%, black 72%, transparent 100%)",
+              maskImage:
+                  "linear-gradient(to right, transparent 0%, black 28%, black 72%, transparent 100%)",
+          };
+
+    // URLs apontam direto para renditions LEVES (não o /download/, que entrega
+    // 4K de até ~50 MB e faz o vídeo travar/bufferizar — o que congela o slider
+    // de progresso, pois `timeupdate` só dispara enquanto o vídeo toca).
+    // Em produção, use vídeos próprios já otimizados/comprimidos.
+    const moments = [
+        {
+            username: "@user1",
+            url: "https://videos.pexels.com/video-files/12271150/12271150-hd_1280_720_25fps.mp4",
+            description: "Descrição do momento 1",
+            date: "10 minutes ago",
+        },
+        {
+            username: "@user2",
+            url: "https://videos.pexels.com/video-files/34268294/14519774_2160_3840_60fps.mp4",
+            description: "Descrição do momento 2",
+            date: "4 hours ago",
+        },
+        {
+            username: "@user3",
+            url: "https://videos.pexels.com/video-files/7366391/7366391-hd_1280_720_25fps.mp4",
+            description: "Descrição do momento 3",
+            date: "Yesterday",
+        },
+    ];
+
     return (
         <div style={pageStyle}>
-            {!isMobile && (
-                <Image
-                    src="/images/bg_desktop.png"
-                    alt="Background desktop"
-                    width={2000}
-                    height={2000}
-                    priority
-                    style={bgImageStyle}
-                />
-            )}
-
-            <div ref={headerRef} style={headerWrapStyle}>
-                <Header />
-            </div>
-
             <main style={mainStyle}>
                 <Screen>
                     <div style={contentWrapStyle}>
                         <HomeCta />
-                        <HomeIllustration />
-                        {isMobile && (
-                            <a
-                                href="https://testflight.apple.com/join/ZATKxY4d"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    marginTop: -50,
-                                    marginBottom: 20,
-                                    alignSelf: "center",
-                                    alignItems: "flex-start",
-                                }}
-                            >
-                                <Image
-                                    src="/icons/svg/download-on-app-store.svg"
-                                    alt="Download on App Store"
-                                    width={180}
-                                    height={60}
+
+                        <div
+                            style={{
+                                width: "100%",
+                                maxWidth: isMobile ? 360 : 620,
+                                position: "relative",
+                                // Desktop: carrossel vira fundo ambiente — atrás
+                                // do texto (z-index negativo, contido pelo main)
+                                // e em baixa opacidade. No mobile fica no fluxo
+                                // normal, abaixo do texto.
+                                zIndex: isMobile ? 0 : -1,
+                                opacity: isMobile ? 1 : 0.6,
+                            }}
+                        >
+                            {/* Caixa com aspect ratio 1080x1674 (ver momentBoxStyle) */}
+                            <div style={momentBoxStyle}>
+                                <div
                                     style={{
-                                        height: 30,
-                                        width: "auto",
+                                        position: "absolute",
+                                        top: 0,
+                                        bottom: 0,
+                                        left: 0,
+                                        height: "100%",
+                                        width: isMobile ? "100%" : 1100,
                                     }}
-                                    priority
-                                />
-                            </a>
-                        )}
+                                >
+                                    <MomentsCarousel
+                                        moments={moments}
+                                        initialIndex={0}
+                                        isMobile={isMobile}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Screen>
             </main>

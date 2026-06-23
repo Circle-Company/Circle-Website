@@ -8,6 +8,7 @@ import fonts from "@/constants/fonts";
 import { useIsMobile } from "@/hooks/use.platform.detection";
 import { colors } from "@/constants/colors";
 import { useLanguage } from "@/contexts/language-context";
+import { LanguageSelector } from "../language-selector";
 
 const linkStyleBase: React.CSSProperties = {
     fontFamily: fonts.family.Semibold,
@@ -25,9 +26,8 @@ export function TermsNav() {
         ...linkStyleBase,
         fontSize: mobile ? fonts.size.body * 0.8 : fonts.size.body * 0.9,
         width: mobile ? "100%" : "auto",
-        textAlign: mobile ? "center" : "right",
+        textAlign: mobile ? "left" : "right",
         display: "inline-block",
-
         // Diagnostics (remove after fixing): helps see if something is covering the links
         position: "relative",
         zIndex: 100000,
@@ -58,41 +58,25 @@ export function TermsNav() {
                     : sizes.spaces[30] * 0.8,
                 alignItems: "center",
                 justifyContent: isMobile ? "center" : "flex-end",
-                textAlign: isMobile ? "center" : "right",
-
+                textAlign: isMobile ? "left" : "right",
                 // Diagnostics: ensure nav itself is not blocked
                 position: "relative",
                 zIndex: 100000,
                 pointerEvents: "auto",
             }}
         >
-            <Link
-                href="/community-guidelines"
-                style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("community-guidelines", e)}
-                onClick={(e) => logPointer("community-guidelines", e)}
-            >
-                {t("Community Guidelines")}
-            </Link>
+            <div style={linkStyle(isMobile)}>
+                <LanguageSelector />
+            </div>
 
             <Link
-                href="/terms-of-service"
+                href="/company"
                 style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("terms-of-service", e)}
-                onClick={(e) => logPointer("terms-of-service", e)}
+                onPointerDown={(e) => logPointer("company", e)}
+                onClick={(e) => logPointer("company", e)}
             >
-                {t("Terms")}
+                {t("Company")}
             </Link>
-
-            <Link
-                href="/privacy-policy"
-                style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("privacy-policy", e)}
-                onClick={(e) => logPointer("privacy-policy", e)}
-            >
-                {t("Privacy Policy")}
-            </Link>
-
             <Link
                 href="/contact-us"
                 style={linkStyle(isMobile)}

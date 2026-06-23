@@ -9,12 +9,14 @@ import { useLanguage } from "@/contexts/language-context";
 import { Button } from "@/components/buttons/standart.animated";
 import { useSizes } from "@/constants/sizes";
 import { useIsMobile } from "@/hooks/use.platform.detection";
-import { isMobileOnly } from "react-device-detect";
+import Link from "next/link";
 
 export function HomeCta() {
     const { t } = useLanguage();
     const isMobile = useIsMobile();
     const sizes = useSizes();
+
+    const iconSize = isMobile ? 23 : 25;
 
     const container: CSSProperties = {
         maxWidth: isMobile ? sizes.screen.width : "50%",
@@ -22,6 +24,7 @@ export function HomeCta() {
         padding: isMobile ? 0 : sizes.paddings[15],
         display: "flex",
         flexDirection: "column",
+        paddingTop: isMobile ? "80px" : 0,
 
         // centro total no mobile
         alignItems: isMobile ? "center" : "flex-start",
@@ -30,69 +33,65 @@ export function HomeCta() {
     };
 
     const title: CSSProperties = {
-        fontSize: isMobile ? fonts.size.title1 * 1.55 : fonts.size.title1 * 3,
+        fontSize: isMobile ? fonts.size.title1 * 1.8 : fonts.size.title1 * 3.5,
         fontFamily: isMobile ? fonts.family.Black : fonts.family.Black,
         lineHeight: isMobile ? 1 : 0.8,
-        marginBottom: isMobile ? sizes.margins[20] : sizes.margins[28],
+        marginBottom: isMobile ? sizes.margins[20] : sizes.margins[72],
     };
 
     const featureRow: CSSProperties = {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: isMobile ? 8 : 12,
         marginLeft: 5,
-        marginBottom: isMobile ? 8 : 12,
+        marginBottom: isMobile ? 8 : 6,
         justifyContent: isMobile ? "center" : "flex-start",
         textAlign: isMobile ? "center" : "left",
     };
 
     const featureText: CSSProperties = {
-        fontSize: isMobile ? fonts.size.body * 1.15 : fonts.size.body * 1.4,
+        fontSize: isMobile ? fonts.size.body * 1.15 : fonts.size.body * 2,
         fontFamily: isMobile ? fonts.family.Medium : fonts.family.Semibold,
         color: "#E3E3E3",
     };
 
     return (
         <div style={container}>
-            <Text style={title}>{t("Connect with real people.")}</Text>
-
-            <div
-                style={{
-                    marginBottom: 20,
-                    alignSelf: isMobile ? "center" : "flex-start",
-
-                    // camada externa (borda com gradiente 45°)
-                    padding: 2, // espessura da “borda”
-                    borderRadius: 15,
-                    background:
-                        "linear-gradient(20deg, #161616 0%, #323232 100%)",
-                    width: "fit-content",
-                }}
-            >
-                {/* camada interna */}
+            <Link href="/">
                 <div
                     style={{
-                        padding: "8px 14px",
-                        borderRadius: 13,
-                        background:
-                            "linear-gradient(30deg, #090909 0%, #161616 50%",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 12,
+                        margin: isMobile ? "0 auto" : undefined,
+                        marginBottom: isMobile ? 50 : 60,
                     }}
                 >
+                    <Image
+                        src="/icons/png/circleApp-iOS-Default-1024x1024@1x.png"
+                        alt="Circle Logo"
+                        width={isMobile ? 30 : 40}
+                        height={isMobile ? 30 : 140}
+                        style={{ height: isMobile ? 30 : 40, width: "auto" }}
+                        priority
+                    />
                     <Text
                         style={{
-                            fontSize: fonts.size.body * 1.2,
-                            fontFamily: fonts.family.Semibold,
+                            fontSize: isMobile
+                                ? fonts.size.title1 * 0.8
+                                : fonts.size.title1,
+                            fontFamily: fonts.family.Black,
                             fontStyle: "italic",
-                            fontWeight: "bold",
-                            color: "#D7D7D7",
-                            whiteSpace: "nowrap",
+                            color: colors.gray.white,
                         }}
                     >
-                        {t("Drag, comment, and have fun...")}
+                        Circle App
                     </Text>
                 </div>
-            </div>
+            </Link>
+            <Text style={title}>{t("Meet people near to you.")}</Text>
 
             <div
                 style={{
@@ -107,9 +106,9 @@ export function HomeCta() {
                     <Image
                         src="/icons/png/winking_face.png"
                         alt=""
-                        width={21}
-                        height={21}
-                        style={{ height: 21, width: 21 }}
+                        width={iconSize}
+                        height={iconSize}
+                        style={{ height: iconSize, width: iconSize }}
                     />
                     <Text style={featureText}>
                         {t("No filter, just authenticity")}
@@ -120,9 +119,9 @@ export function HomeCta() {
                     <Image
                         src="/icons/png/bell.png"
                         alt=""
-                        width={21}
-                        height={21}
-                        style={{ height: 21, width: 21 }}
+                        width={iconSize}
+                        height={iconSize}
+                        style={{ height: iconSize, width: iconSize }}
                     />
                     <Text style={featureText}>
                         {t("Interactions all the time")}
@@ -133,9 +132,9 @@ export function HomeCta() {
                     <Image
                         src="/icons/png/v_hand.png"
                         alt=""
-                        width={21}
-                        height={21}
-                        style={{ height: 21, width: 21 }}
+                        width={iconSize}
+                        height={iconSize}
+                        style={{ height: iconSize, width: iconSize }}
                     />
                     <Text style={featureText}>
                         {t("The vibe that matches")}
@@ -143,64 +142,54 @@ export function HomeCta() {
                 </div>
             </div>
 
-            <div
-                style={{
-                    marginTop: 30,
-                    width: isMobile ? "100%" : "auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 12,
-                }}
-            >
-                <Button
-                    action={async () => {
-                        window.open(
-                            "https://testflight.apple.com/join/ZATKxY4d",
-                            "_blank",
-                            "noopener,noreferrer",
-                        );
-                    }}
+            {isMobile && (
+                <div
                     style={{
-                        height: sizes.button.height * 1.2,
-                        backgroundColor: colors.gray.white,
-                        color: colors.gray.black,
-                        borderRadius: 100,
-                    }}
-                    animation={{
-                        enabled: true,
-                        tap: { scale: 0.9, duration: 0.8, bounciness: 8 },
-                        hover: {
-                            scale: 1.1,
-                            scaleDuration: 1,
-                            colorDuration: 0.5,
-                            scaleExitDuration: 0.6,
-                            colorExitDuration: 0.2,
-                            backgroundColor: colors.purple[5],
-                            textColor: colors.gray.white,
-                        },
+                        marginTop: 30,
+                        width: isMobile ? "100%" : "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 12,
                     }}
                 >
-                    <Text
+                    <Button
+                        action={async () => {
+                            window.open(
+                                "https://testflight.apple.com/join/ZATKxY4d",
+                                "_blank",
+                                "noopener,noreferrer",
+                            );
+                        }}
                         style={{
-                            fontSize: fonts.size.body * (isMobile ? 1.5 : 1.4),
-                            fontFamily: fonts.family.Black,
-                            fontStyle: "italic",
-                            fontWeight: isMobile ? "black" : "bold",
-                            color: "inherit",
+                            height: isMobile
+                                ? sizes.button.height * 1.3
+                                : sizes.button.height * 1.3,
+                            backgroundColor: colors.gray.white,
+                            color: colors.gray.black,
+                            borderRadius: 100,
+                        }}
+                        animation={{
+                            enabled: true,
+                            tap: { scale: 0.9, duration: 0.8, bounciness: 8 },
+                            hover: {
+                                scale: 1.1,
+                                scaleDuration: 1,
+                                colorDuration: 0.5,
+                                scaleExitDuration: 0.6,
+                                colorExitDuration: 0.2,
+                                backgroundColor: colors.purple[5],
+                                textColor: colors.gray.white,
+                            },
                         }}
                     >
-                        {t("Download and make friends")}
-                    </Text>
-                    {isMobile && (
                         <span
                             aria-hidden="true"
                             style={{
-                                width: 25,
-                                marginTop: -2,
-                                marginLeft: 10,
-                                height: 25,
+                                top: isMobile ? 0 : "-3px",
+                                width: isMobile ? 24 : 28,
+                                height: isMobile ? 24 : 28,
                                 display: "block",
                                 backgroundColor: "currentColor",
                                 WebkitMaskImage:
@@ -212,36 +201,24 @@ export function HomeCta() {
                                 maskPosition: "center",
                                 WebkitMaskSize: "contain",
                                 maskSize: "contain",
+                                marginRight: isMobile ? 4 : 0,
                             }}
                         />
-                    )}
-                </Button>
-                {!isMobile && (
-                    <a
-                        href="https://apps.apple.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            marginTop: 20,
-                            marginLeft: 7,
-                            alignSelf: "flex-start",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <Image
-                            src="/icons/svg/download-on-app-store.svg"
-                            alt={t("Available on the App Store")}
-                            width={180}
-                            height={60}
+                        <Text
                             style={{
-                                height: 44,
-                                width: "auto",
+                                fontSize:
+                                    fonts.size.body * (isMobile ? 1.3 : 1.4),
+                                fontFamily: fonts.family.Black,
+                                fontStyle: "italic",
+                                fontWeight: isMobile ? "black" : "bold",
+                                color: "inherit",
                             }}
-                            priority
-                        />
-                    </a>
-                )}
-            </div>
+                        >
+                            {t("Download and make friends")}
+                        </Text>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

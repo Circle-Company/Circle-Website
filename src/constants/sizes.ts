@@ -30,7 +30,7 @@ export function useSizes() {
 
     const footer = React.useMemo(
         () => ({
-            height: 60,
+            height: 85,
             width: viewportWidth,
             padding: 10 / 2,
         }),
