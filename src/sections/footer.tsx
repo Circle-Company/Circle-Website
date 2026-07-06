@@ -82,6 +82,7 @@ export function Footer() {
                                         : fonts.size.body * 1.1,
                                     fontFamily: fonts.family.Semibold,
                                     color: colors.gray[3],
+                                    marginLeft: 3
                                 }}
                             >
                                 Terms & Privacy
@@ -98,7 +99,7 @@ export function Footer() {
                                 color: colors.gray[5],
                             }}
                         >
-                            © 2025 Circle LLC
+                            © 2026 Circle LLC
                         </Text>
                     )}
                 </div>

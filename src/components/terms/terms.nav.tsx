@@ -15,6 +15,7 @@ const linkStyleBase: React.CSSProperties = {
     textDecoration: "none",
     color: colors.gray[4],
     cursor: "pointer",
+    transition: "color 0.2s ease",
 };
 
 export function TermsNav() {
@@ -47,53 +48,56 @@ export function TermsNav() {
     };
 
     return (
-        <nav
-            aria-label="Footer navigation"
-            style={{
-                display: "flex",
-                flexDirection: isMobile ? "column" : "row",
-                flexWrap: isMobile ? "nowrap" : "wrap",
-                gap: isMobile
-                    ? sizes.paddings[10] * 0.6
-                    : sizes.spaces[30] * 0.8,
-                alignItems: "center",
-                justifyContent: isMobile ? "center" : "flex-end",
-                textAlign: isMobile ? "left" : "right",
-                // Diagnostics: ensure nav itself is not blocked
-                position: "relative",
-                zIndex: 100000,
-                pointerEvents: "auto",
-            }}
-        >
-            <div style={linkStyle(isMobile)}>
-                <LanguageSelector />
-            </div>
-
-            <Link
-                href="/company"
-                style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("company", e)}
-                onClick={(e) => logPointer("company", e)}
+        <>
+            <style
+                dangerouslySetInnerHTML={{
+                    __html: `
+                    .termsNavLink:hover {
+                        color: ${colors.gray.white};
+                    }
+                `,
+                }}
+            />
+            <nav
+                aria-label="Footer navigation"
+                style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    flexWrap: isMobile ? "nowrap" : "wrap",
+                    gap: isMobile
+                        ? sizes.paddings[10] * 0.6
+                        : sizes.spaces[30] * 0.8,
+                    alignItems: "center",
+                    justifyContent: isMobile ? "center" : "flex-end",
+                    textAlign: isMobile ? "left" : "right",
+                    // Diagnostics: ensure nav itself is not blocked
+                    position: "relative",
+                    zIndex: 100000,
+                    pointerEvents: "auto",
+                }}
             >
-                {t("Company")}
-            </Link>
-            <Link
-                href="/contact-us"
-                style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("contact-us", e)}
-                onClick={(e) => logPointer("contact-us", e)}
-            >
-                {t("Contact Us")}
-            </Link>
-            <Link
-                href="/help"
-                className="termsNavLink"
-                style={linkStyle(isMobile)}
-                onPointerDown={(e) => logPointer("help", e)}
-                onClick={(e) => logPointer("help", e)}
-            >
-                {t("Help")}
-            </Link>
-        </nav>
+                <div style={linkStyle(isMobile)}>
+                    <LanguageSelector />
+                </div>
+                <Link
+                    href="/contact-us"
+                    className={isMobile ? undefined : "termsNavLink"}
+                    style={linkStyle(isMobile)}
+                    onPointerDown={(e) => logPointer("contact-us", e)}
+                    onClick={(e) => logPointer("contact-us", e)}
+                >
+                    {t("Contact Us")}
+                </Link>
+                <Link
+                    href="/help"
+                    className={isMobile ? undefined : "termsNavLink"}
+                    style={linkStyle(isMobile)}
+                    onPointerDown={(e) => logPointer("help", e)}
+                    onClick={(e) => logPointer("help", e)}
+                >
+                    {t("Help")}
+                </Link>
+            </nav>
+        </>
     );
 }

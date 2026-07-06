@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
+import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
+import { Screen } from "@/components/screen";
 import { AnimatedButton as Button } from "@/components/buttons/standart.animated";
 import { Text } from "@/components/themed";
 import { useIsMobile } from "@/hooks/use.platform.detection";
@@ -49,47 +51,8 @@ export default function ContactUsPage() {
     const sizes = useSizes();
     const { t } = useLanguage();
 
-    useEffect(() => {
-        const html = document.documentElement;
-        const body = document.body;
-
-        const prevHtmlOverflowY = html.style.overflowY;
-        const prevBodyOverflowY = body.style.overflowY;
-        const prevHtmlHeight = html.style.height;
-        const prevBodyHeight = body.style.height;
-        const prevHtmlMaxHeight = html.style.maxHeight;
-        const prevBodyMaxHeight = body.style.maxHeight;
-
-        html.style.overflowY = "auto";
-        body.style.overflowY = "auto";
-        html.style.height = "auto";
-        body.style.height = "auto";
-        html.style.maxHeight = "none";
-        body.style.maxHeight = "none";
-
-        return () => {
-            html.style.overflowY = prevHtmlOverflowY;
-            body.style.overflowY = prevBodyOverflowY;
-            html.style.height = prevHtmlHeight;
-            body.style.height = prevBodyHeight;
-            html.style.maxHeight = prevHtmlMaxHeight;
-            body.style.maxHeight = prevBodyMaxHeight;
-        };
-    }, []);
-
     const EMAIL = "contact@circleapp.com.br";
     const mailto = `mailto:${EMAIL}`;
-
-    const pageStyle: React.CSSProperties = {
-        position: "relative",
-        width: "100%",
-        maxWidth: "100vw",
-        height: "auto",
-        minHeight: "100vh",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-    };
 
     const contentWrapStyle: React.CSSProperties = {
         width: "100%",
@@ -150,149 +113,152 @@ export default function ContactUsPage() {
     };
 
     return (
-        <div style={pageStyle}>
-            <div style={contentWrapStyle}>
-                <div style={contentStyle}>
-                    <div style={cardStyle}>
-                        <Text
-                            as="div"
-                            style={{
-                                fontFamily: fonts.family.Black,
-                                fontStyle: "italic",
-                                fontWeight: "bold",
-                                fontSize: isMobile
-                                    ? fonts.size.title1 * 1.2
-                                    : fonts.size.title1 * 1.6,
-                                lineHeight: 1.05,
-                            }}
-                        >
-                            {t("Contact Title")}
-                        </Text>
-
-                        <Text
-                            as="p"
-                            style={{
-                                fontFamily:
-                                    fonts.family.Medium ??
-                                    fonts.family.Semibold,
-                                fontSize: isMobile
-                                    ? fonts.size.subheadline * 0.95
-                                    : fonts.size.subheadline,
-                                color: colors.gray[4],
-                                maxWidth: 700,
-                                lineHeight: 1.6,
-                                whiteSpace: "pre-line",
-                                textAlign: "center",
-                            }}
-                        >
-                            {t("Contact Description")}
-                        </Text>
-
-                        <a
-                            href={mailto}
-                            style={{
-                                textDecoration: "none",
-                                width: isMobile ? "100%" : "auto",
-                                maxWidth: isMobile ? 520 : "none",
-                            }}
-                        >
-                            <Button
-                                action={async () => {
-                                    // Mantém comportamento nativo do <a>. Nada a fazer aqui.
-                                }}
+        <div>
+            <Header />
+            <Screen>
+                <div style={contentWrapStyle}>
+                    <div style={contentStyle}>
+                        <div style={cardStyle}>
+                            <Text
+                                as="div"
                                 style={{
-                                    ...buttonStyle,
-
-                                    // padding do botão (mantém altura/visual), o padding específico do ícone está no próprio span
-                                    paddingTop: sizes.paddings[20],
-                                    paddingBottom: sizes.paddings[20],
-                                    paddingLeft: 8,
-                                }}
-                                className="contact-email-button"
-                                animation={{
-                                    enabled: true,
-                                    tap: {
-                                        scale: 0.9,
-                                        duration: 0.8,
-                                        bounciness: 8,
-                                    },
-                                    hover: {
-                                        scale: 1.1,
-                                        scaleDuration: 1,
-                                        colorDuration: 0.5,
-                                        scaleExitDuration: 0.6,
-                                        colorExitDuration: 0.2,
-                                        backgroundColor: colors.purple[5],
-                                        textColor: colors.gray.white,
-                                    },
+                                    fontFamily: fonts.family.Black,
+                                    fontStyle: "italic",
+                                    fontWeight: "bold",
+                                    fontSize: isMobile
+                                        ? fonts.size.title1 * 1.2
+                                        : fonts.size.title1 * 1.6,
+                                    lineHeight: 1.05,
                                 }}
                             >
-                                <span
-                                    className="contact-email-icon"
+                                {t("Contact Title")}
+                            </Text>
+
+                            <Text
+                                as="p"
+                                style={{
+                                    fontFamily:
+                                        fonts.family.Medium ??
+                                        fonts.family.Semibold,
+                                    fontSize: isMobile
+                                        ? fonts.size.subheadline * 0.95
+                                        : fonts.size.subheadline,
+                                    color: colors.gray[4],
+                                    maxWidth: 700,
+                                    lineHeight: 1.6,
+                                    whiteSpace: "pre-line",
+                                    textAlign: "center",
+                                }}
+                            >
+                                {t("Contact Description")}
+                            </Text>
+
+                            <a
+                                href={mailto}
+                                style={{
+                                    textDecoration: "none",
+                                    width: isMobile ? "100%" : "auto",
+                                    maxWidth: isMobile ? 520 : "none",
+                                }}
+                            >
+                                <Button
+                                    action={async () => {
+                                        // Mantém comportamento nativo do <a>. Nada a fazer aqui.
+                                    }}
                                     style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        flexShrink: 0,
+                                        ...buttonStyle,
 
-                                        // margem do bloco do ícone: 5px topo/baixo/esquerda e 10px direita
-                                        marginTop: 5,
-                                        marginBottom: 5,
-                                        marginLeft: 5,
-                                        marginRight: 16,
-                                        padding: 6,
-                                        scale: 1.4,
-
-                                        // arredonda o "container" do ícone e remove qualquer aparência de outline
-                                        borderRadius: 999,
-                                        backgroundColor:
-                                            "rgba(255, 255, 255, 0.08)",
-                                        outline: "none",
-                                        border: "none",
-                                        boxShadow: "none",
-                                        overflow: "hidden",
+                                        // padding do botão (mantém altura/visual), o padding específico do ícone está no próprio span
+                                        paddingTop: sizes.paddings[20],
+                                        paddingBottom: sizes.paddings[20],
+                                        paddingLeft: 8,
+                                    }}
+                                    className="contact-email-button"
+                                    animation={{
+                                        enabled: true,
+                                        tap: {
+                                            scale: 0.9,
+                                            duration: 0.8,
+                                            bounciness: 8,
+                                        },
+                                        hover: {
+                                            scale: 1.1,
+                                            scaleDuration: 1,
+                                            colorDuration: 0.5,
+                                            scaleExitDuration: 0.6,
+                                            colorExitDuration: 0.2,
+                                            backgroundColor: colors.purple[5],
+                                            textColor: colors.gray.white,
+                                        },
                                     }}
                                 >
-                                    <EmailIcon
-                                        size={isMobile ? 16 : 18}
-                                        color="currentColor"
-                                    />
-                                </span>
+                                    <span
+                                        className="contact-email-icon"
+                                        style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            flexShrink: 0,
 
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.family.Bold,
-                                        fontWeight: "bold",
-                                        fontSize: isMobile
-                                            ? fonts.size.body
-                                            : fonts.size.body * 1.4,
-                                        color: "inherit",
-                                    }}
-                                >
-                                    {EMAIL}
-                                </Text>
-                            </Button>
-                        </a>
+                                            // margem do bloco do ícone: 5px topo/baixo/esquerda e 10px direita
+                                            marginTop: 5,
+                                            marginBottom: 5,
+                                            marginLeft: 5,
+                                            marginRight: 16,
+                                            padding: 6,
+                                            scale: 1.4,
 
-                        <Text
-                            as="p"
-                            style={{
-                                marginTop: 20,
-                                fontFamily:
-                                    fonts.family.Medium ??
-                                    fonts.family.Semibold,
-                                fontSize: isMobile
-                                    ? fonts.size.body * 0.85
-                                    : fonts.size.body * 1.1,
-                                color: colors.gray[5],
-                                maxWidth: 760,
-                            }}
-                        >
-                            {t("Contact Hint")}
-                        </Text>
+                                            // arredonda o "container" do ícone e remove qualquer aparência de outline
+                                            borderRadius: 999,
+                                            backgroundColor:
+                                                "rgba(255, 255, 255, 0.08)",
+                                            outline: "none",
+                                            border: "none",
+                                            boxShadow: "none",
+                                            overflow: "hidden",
+                                        }}
+                                    >
+                                        <EmailIcon
+                                            size={isMobile ? 16 : 18}
+                                            color="currentColor"
+                                        />
+                                    </span>
+
+                                    <Text
+                                        style={{
+                                            fontFamily: fonts.family.Bold,
+                                            fontWeight: "bold",
+                                            fontSize: isMobile
+                                                ? fonts.size.body
+                                                : fonts.size.body * 1.4,
+                                            color: "inherit",
+                                        }}
+                                    >
+                                        {EMAIL}
+                                    </Text>
+                                </Button>
+                            </a>
+
+                            <Text
+                                as="p"
+                                style={{
+                                    marginTop: 20,
+                                    fontFamily:
+                                        fonts.family.Medium ??
+                                        fonts.family.Semibold,
+                                    fontSize: isMobile
+                                        ? fonts.size.body * 0.85
+                                        : fonts.size.body * 1.1,
+                                    color: colors.gray[5],
+                                    maxWidth: 760,
+                                }}
+                            >
+                                {t("Contact Hint")}
+                            </Text>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Screen>
             <Footer />
         </div>
     );

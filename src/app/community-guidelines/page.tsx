@@ -19,38 +19,24 @@ export default function CommunityGuidelinesPage() {
     const { communityGuidelines, loading, error } = state;
 
     return (
-        <div
-            style={{
-                position: "relative",
-                // usado pelo TermsContainer para calcular a altura disponível
-                ["--app-header-height" as any]: "72px",
-                ["--app-footer-height" as any]: "140px",
-            }}
-        >
+        <div>
             <Header />
             <Screen>
                 <div
                     style={{
+                        width: "100%",
                         display: "flex",
                         alignItems: "flex-start",
                         justifyContent: "center",
-                        background: "#f2f",
                         gap: 70,
                     }}
                 >
                     <div
-                        style={{
-                            marginTop: isMobile ? 0 : sizes.margins[15],
-                        }}
+                        style={{ marginTop: isMobile ? 0 : sizes.margins[15] }}
                     >
                         <TermsSidebar />
                     </div>
-                    <TermsContainer
-                        style={{
-                            flex: 1,
-                            maxWidth: 900,
-                        }}
-                    >
+                    <TermsContainer style={{ flex: 1, maxWidth: 900 }}>
                         {error && <Error message={error} />}
                         {loading && <Loading />}
                         {!error && !loading && (
