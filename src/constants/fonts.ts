@@ -1,4 +1,4 @@
-export default {
+const fonts = {
   size: {
     extraLargeTitle: 36,
     extraLargeTitle2: 28,
@@ -30,3 +30,5 @@ export default {
     Black: "Inter-Black",
   },
 };
+
+export default fonts
