@@ -6,7 +6,7 @@ import axios from "axios";
  */
 const resolvedBaseURL =
     process.env.NODE_ENV === "production"
-        ? "https://circle-app-0d1288f2636e.herokuapp.com"
+        ? process.env.NEXT_PUBLIC_API_BASE_URL
         : "http://localhost:3000";
 
 export const httpClient = axios.create({
