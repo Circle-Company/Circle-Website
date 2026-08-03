@@ -24,23 +24,35 @@ export function TermsSidebar() {
     const isMobile = useIsMobile();
     const sizes = useSizes();
 
+    // No mobile o menu deixa de ser lateral e vira um bloco no fim da página:
+    // largura total, links em linha centrados e um separador acima.
     const container: React.CSSProperties = {
         display: "flex",
-        flexDirection: "column",
-        gap: isMobile ? 8 : 10,
-        paddingLeft: isMobile ? sizes.paddings[10] : 0,
+        flexDirection: isMobile ? "row" : "column",
+        flexWrap: isMobile ? "wrap" : "nowrap",
+        alignItems: "center",
+        justifyContent: isMobile ? "center" : "flex-start",
+        gap: isMobile ? sizes.paddings[10] : 10,
+        width: isMobile ? "100%" : "auto",
+        boxSizing: "border-box",
+        paddingInline: isMobile ? sizes.paddings[20] : 0,
+        paddingTop: isMobile ? sizes.paddings[20] : 0,
+        borderTop: isMobile ? "1px solid rgba(255,255,255,0.12)" : "none",
+        textAlign: isMobile ? "center" : "left",
     };
 
+    // Renderizado apenas no desktop.
     const title: React.CSSProperties = {
-        fontFamily: isMobile ? fonts.family.Bold : fonts.family.Black,
-        fontSize: isMobile ? fonts.size.title2 * 0.7 : fonts.size.title2,
+        fontFamily: fonts.family.Black,
+        fontSize: fonts.size.title2,
         color: colors.gray.white,
-        marginBottom: isMobile ? sizes.margins[10] * 0.4 : sizes.margins[10],
+        marginBottom: sizes.margins[10],
     };
 
     return (
         <aside style={container}>
-            <div style={title}>Legal Pages</div>
+            {/* No mobile o menu vira uma faixa de links no fim da página, sem título. */}
+            {!isMobile && <div style={title}>Legal Pages</div>}
             {TERMS_LINKS.map((item) => {
                 const isActive =
                     pathname === item.href ||

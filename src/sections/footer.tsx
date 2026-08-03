@@ -30,10 +30,9 @@ export function Footer() {
                     ? sizes.paddings[20] * 1.5
                     : sizes.paddings[10],
                 paddingBottom: isMobile ? sizes.paddings[72] : 0,
-                paddingLeft: isMobile ? sizes.paddings[10] : 0,
                 display: "flex",
-                alignItems: "flex-start",
-                justifyContent: isMobile ? "flex-start" : "center",
+                alignItems: isMobile ? "center" : "flex-start",
+                justifyContent: "center",
 
                 // Garante que o footer fique acima de qualquer overlay/elemento absoluto
                 // e permaneça clicável.
@@ -47,8 +46,9 @@ export function Footer() {
                     width: "100%",
                     maxWidth: isMobile ? "95vw" : "97vw",
                     display: "flex",
-                    alignItems: isMobile ? "stretch" : "center",
+                    alignItems: "center",
                     justifyContent: isMobile ? "center" : "space-between",
+                    textAlign: isMobile ? "center" : "left",
                     gap: isMobile
                         ? sizes.paddings[10] * 1.2
                         : sizes.paddings[10],
@@ -62,8 +62,8 @@ export function Footer() {
                 <div
                     style={{
                         display: "flex",
-                        alignItems: "flex-start",
-                        justifyContent: isMobile ? "flex-start" : "center",
+                        alignItems: isMobile ? "center" : "flex-start",
+                        justifyContent: "center",
                         gap: isMobile
                             ? sizes.paddings[10] * 0.4
                             : sizes.paddings[10] * 0.5,
@@ -148,7 +148,7 @@ export function Footer() {
                             color: colors.gray[5],
                         }}
                     >
-                        © 2025 Circle LLC
+                        © 2026 Circle LLC
                     </Text>
                 )}
             </div>
