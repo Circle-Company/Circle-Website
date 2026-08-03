@@ -27,25 +27,12 @@ export function TermsNav() {
         ...linkStyleBase,
         fontSize: mobile ? fonts.size.body * 0.8 : fonts.size.body * 0.9,
         width: mobile ? "100%" : "auto",
-        textAlign: mobile ? "left" : "right",
+        textAlign: mobile ? "center" : "right",
         display: "inline-block",
-        // Diagnostics (remove after fixing): helps see if something is covering the links
         position: "relative",
         zIndex: 100000,
         pointerEvents: "auto",
     });
-
-    const logPointer = (
-        label: string,
-        e:
-            | React.MouseEvent<HTMLAnchorElement>
-            | React.PointerEvent<HTMLAnchorElement>,
-    ) => {
-        // If you DON'T see these logs, the click isn't reaching the <a> (overlay is intercepting)
-        // If you DO see them but navigation doesn't happen, something is preventing default globally.
-        // eslint-disable-next-line no-console
-        console.log("[TermsNav]", label, "event", e.type);
-    };
 
     return (
         <>
@@ -69,8 +56,7 @@ export function TermsNav() {
                         : sizes.spaces[30] * 0.8,
                     alignItems: "center",
                     justifyContent: isMobile ? "center" : "flex-end",
-                    textAlign: isMobile ? "left" : "right",
-                    // Diagnostics: ensure nav itself is not blocked
+                    textAlign: isMobile ? "center" : "right",
                     position: "relative",
                     zIndex: 100000,
                     pointerEvents: "auto",
@@ -83,8 +69,6 @@ export function TermsNav() {
                     href="/contact-us"
                     className={isMobile ? undefined : "termsNavLink"}
                     style={linkStyle(isMobile)}
-                    onPointerDown={(e) => logPointer("contact-us", e)}
-                    onClick={(e) => logPointer("contact-us", e)}
                 >
                     {t("Contact Us")}
                 </Link>
@@ -92,8 +76,6 @@ export function TermsNav() {
                     href="/help"
                     className={isMobile ? undefined : "termsNavLink"}
                     style={linkStyle(isMobile)}
-                    onPointerDown={(e) => logPointer("help", e)}
-                    onClick={(e) => logPointer("help", e)}
                 >
                     {t("Help")}
                 </Link>

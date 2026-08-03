@@ -7,7 +7,6 @@ import { colors } from "@/constants/colors";
 import { useSizes } from "@/constants/sizes";
 import { useIsMobile } from "@/hooks/use.platform.detection";
 import { CSSProperties } from "react";
-import Image from "next/image";
 
 interface RenderTermsProps {
     doc: TermsDocument;
@@ -178,18 +177,6 @@ export function RenderTerms({ doc }: RenderTermsProps) {
         <div style={contentContainerStyle}>
             {/* Header Section */}
             <div style={headerContainerStyle}>
-                <Image
-                    src="/icons/png/circleApp-iOS-Default-1024x1024@1x.png"
-                    alt="Circle Logo"
-                    width={55}
-                    height={55}
-                    style={{
-                        height: 55,
-                        width: "auto",
-                        marginBottom: sizes.margins[20],
-                    }}
-                    priority
-                />
                 <div style={{ marginBottom: sizes.margins[5] }}>
                     <Text style={titleStyle}>{doc.title}</Text>
                 </div>

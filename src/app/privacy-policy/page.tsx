@@ -26,17 +26,29 @@ export default function PrivacyPolicyPage() {
                     style={{
                         width: "100%",
                         display: "flex",
-                        alignItems: "flex-start",
+                        // No mobile empilha: conteúdo primeiro, menu no fim da página.
+                        flexDirection: isMobile ? "column" : "row",
+                        alignItems: isMobile ? "stretch" : "flex-start",
                         justifyContent: "center",
-                        gap: 70,
+                        gap: isMobile ? sizes.margins[15] : 70,
                     }}
                 >
                     <div
-                        style={{ marginTop: isMobile ? 0 : sizes.margins[15] }}
+                        style={{
+                            order: isMobile ? 2 : 1,
+                            marginTop: isMobile ? 0 : sizes.margins[15],
+                            width: isMobile ? "100%" : "auto",
+                        }}
                     >
                         <TermsSidebar />
                     </div>
-                    <TermsContainer style={{ flex: 1, maxWidth: 900 }}>
+                    <TermsContainer
+                        style={{
+                            order: isMobile ? 1 : 2,
+                            flex: isMobile ? "none" : 1,
+                            maxWidth: isMobile ? "100%" : 900,
+                        }}
+                    >
                         {error && <Error message={error} />}
                         {loading && <Loading />}
                         {!error && !loading && (
