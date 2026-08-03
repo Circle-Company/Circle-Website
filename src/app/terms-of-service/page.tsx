@@ -21,7 +21,19 @@ export default function TermsOfServicePage() {
     return (
         <div>
             <Header />
-            <Screen>
+            <Screen
+                style={
+                    isMobile
+                        ? undefined
+                        : {
+                              // Desktop trava o scroll no html/body, então esta área
+                              // precisa rolar por conta própria.
+                              height: `calc(100vh - ${sizes.header.height + sizes.footer.height}px)`,
+                              overflowY: "auto",
+                              justifyContent: "flex-start",
+                          }
+                }
+            >
                 <div
                     style={{
                         width: "100%",
